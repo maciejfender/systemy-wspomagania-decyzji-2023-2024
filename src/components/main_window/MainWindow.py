@@ -1,5 +1,5 @@
-from HeaderAbstractFrame import HeaderAbstractFrame, tk
-from CenterAndLowerCompoundPanel import CenterAndLowerCompoundPanel
+from HeaderFrame import HeaderFrame
+from CenterAndLowerCompoundPanel import CenterAndLowerCompoundPanel, tk
 
 
 class MainWindow(tk.Tk):
@@ -13,7 +13,7 @@ class MainWindow(tk.Tk):
         self.title("Kuwa najlepsza apka ever")
 
     def mount(self):
-        self.header_frame = HeaderAbstractFrame(self)
+        self.header_frame = HeaderFrame(self)
         self.center_and_lower_compound_panel = CenterAndLowerCompoundPanel(self)
 
         self.header_frame.pack(fill=tk.X, expand=False)

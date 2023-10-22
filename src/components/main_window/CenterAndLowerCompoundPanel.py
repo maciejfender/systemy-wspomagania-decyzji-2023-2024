@@ -1,8 +1,8 @@
-from src.components.abstract.CustomAbstractFrame import CustomAbstractFrame
+from CustomFrame import CustomFrame
 from CenterPanel import CenterPanel, tk
 
 
-class CenterAndLowerCompoundPanel(CustomAbstractFrame):
+class CenterAndLowerCompoundPanel(CustomFrame):
 
     def __init__(self, master) -> None:
         super().__init__(master)

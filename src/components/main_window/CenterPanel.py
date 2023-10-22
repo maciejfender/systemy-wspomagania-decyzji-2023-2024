@@ -1,7 +1,8 @@
-from src.components.abstract.CustomAbstractFrame import CustomAbstractFrame, tk
+from CustomFrame import CustomFrame
+import tkinter as tk
 
 
-class CenterPanel(CustomAbstractFrame):
+class CenterPanel(CustomFrame):
 
     def __init__(self, master) -> None:
         super().__init__(master)
