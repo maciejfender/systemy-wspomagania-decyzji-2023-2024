@@ -15,7 +15,7 @@ class FooterFrame(CustomAbstractFrame, metaclass=FooterFrameMeta):
 
     def load_data_excel(self, path):
         self.df = pd.read_excel(path)
-        print(self.df)
+        # print(self.df)
         self.pt = Table(self, dataframe=self.df)
         self.pt.show()
         self.update()

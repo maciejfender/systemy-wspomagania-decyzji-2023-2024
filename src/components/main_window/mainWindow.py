@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from src.components.engine.engine import MainEngine
 from src.components.main_window.centerAndLowerCompoundPanel import CenterAndLowerCompoundPanel
 from src.components.main_window.headerFrame import HeaderFrame
 
@@ -9,10 +10,10 @@ class MainWindow(tk.Tk):
     def __init__(self, ) -> None:
         super().__init__()
         self.right_frame = None
-        self.footer_frame = None
         self.center_and_lower_compound_panel = None
         self.header_frame = None
         self.title("SWD 2023-24")
+        self.engine = MainEngine()
 
     def mount(self):
         self.header_frame = HeaderFrame(self)
