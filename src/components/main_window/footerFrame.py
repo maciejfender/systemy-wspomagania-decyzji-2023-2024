@@ -1,6 +1,3 @@
-import tkinter as tk
-
-import matplotlib.pyplot as plt
 import pandas as pd
 from pandastable import Table
 

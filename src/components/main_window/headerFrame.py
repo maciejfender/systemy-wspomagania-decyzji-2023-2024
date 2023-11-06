@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 
-from src.components.abstract.headerAbstractFrame import HeaderAbstractFrame
+from src.components.abstract.customAbstractFrame import HeaderAbstractFrame
 from src.components.main_window.footerFrame import FooterFrame
 
 
