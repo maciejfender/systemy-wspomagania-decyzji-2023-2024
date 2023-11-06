@@ -1,6 +1,9 @@
-from src.components.abstract.HeaderAbstractFrame import HeaderAbstractFrame, tk
-from FooterFrame import FooterFrame
+import tkinter as tk
 from tkinter import filedialog
+
+from src.components.abstract.headerAbstractFrame import HeaderAbstractFrame
+from src.components.main_window.footerFrame import FooterFrame
+
 
 class HeaderFrame(HeaderAbstractFrame):
     def __init__(self, master):
@@ -16,4 +19,3 @@ class HeaderFrame(HeaderAbstractFrame):
         print(file.name)
         ff = FooterFrame()
         ff.load_data_excel(file.name)
-

@@ -1,10 +1,11 @@
-from src.components.abstract.CustomAbstractFrame import CustomAbstractFrame
-from FooterFrameMeta import FooterFrameMeta
 import tkinter as tk
 
-from pandastable import Table
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+from pandastable import Table
+
+from src.components.abstract.customAbstractFrame import CustomAbstractFrame
+from src.components.main_window.footerFrameMeta import FooterFrameMeta
 
 
 class FooterFrame(CustomAbstractFrame, metaclass=FooterFrameMeta):

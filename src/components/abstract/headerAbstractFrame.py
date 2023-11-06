@@ -1,4 +1,4 @@
-from CustomAbstractFrame import CustomAbstractFrame, tk
+from src.components.abstract.customAbstractFrame import CustomAbstractFrame
 
 
 class HeaderAbstractFrame(CustomAbstractFrame):

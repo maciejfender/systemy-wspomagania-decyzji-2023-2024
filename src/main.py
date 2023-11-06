@@ -1,4 +1,4 @@
-from main_window.MainWindow import MainWindow
+from components.main_window.mainWindow import MainWindow
 
 
 def main():

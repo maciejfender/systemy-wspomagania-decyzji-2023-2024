@@ -1,6 +1,7 @@
-from HeaderFrame import HeaderFrame
-from FooterFrame import FooterFrame
-from CenterAndLowerCompoundPanel import CenterAndLowerCompoundPanel, tk
+import tkinter as tk
+
+from src.components.main_window.centerAndLowerCompoundPanel import CenterAndLowerCompoundPanel
+from src.components.main_window.headerFrame import HeaderFrame
 
 
 class MainWindow(tk.Tk):
@@ -11,7 +12,7 @@ class MainWindow(tk.Tk):
         self.footer_frame = None
         self.center_and_lower_compound_panel = None
         self.header_frame = None
-        self.title("Kuwa najlepsza apka ever")
+        self.title("SWD 2023-24")
 
     def mount(self):
         self.header_frame = HeaderFrame(self)

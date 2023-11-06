@@ -1,6 +1,8 @@
-from CustomFrame import CustomFrame
-from CenterPanel import CenterPanel, tk
-from FooterFrame import FooterFrame
+import tkinter as tk
+
+from src.components.main_window.centerPanel import CenterPanel
+from src.components.main_window.customFrame import CustomFrame
+from src.components.main_window.footerFrame import FooterFrame
 
 
 class CenterAndLowerCompoundPanel(CustomFrame):

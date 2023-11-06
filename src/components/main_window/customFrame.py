@@ -1,4 +1,4 @@
-from src.components.abstract.CustomAbstractFrame import CustomAbstractFrame
+from src.components.abstract.customAbstractFrame import CustomAbstractFrame
 
 
 class CustomFrame(CustomAbstractFrame):

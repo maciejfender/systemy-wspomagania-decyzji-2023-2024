@@ -1,5 +1,6 @@
-from CustomFrame import CustomFrame
 import tkinter as tk
+
+from src.components.main_window.customFrame import CustomFrame
 
 
 class CenterPanel(CustomFrame):

@@ -1,4 +1,4 @@
-from CustomAbstractFrame import CustomAbstractFrame
+from customAbstractFrame import CustomAbstractFrame
 
 
 class FooterAbstractFrame(CustomAbstractFrame):
