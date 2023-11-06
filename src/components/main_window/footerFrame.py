@@ -1,21 +1,35 @@
-import pandas as pd
-from pandastable import Table
+from pandastable import Table, TableModel
 
-from src.components.abstract.customAbstractFrame import CustomAbstractFrame
-from src.components.main_window.footerFrameMeta import FooterFrameMeta
+from src.components.abstract.abstractFrames import CustomAbstractFrame
 
 
-class FooterFrame(CustomAbstractFrame, metaclass=FooterFrameMeta):
-    def __init__(self, master=None):
+class FooterFrame(CustomAbstractFrame):
+    def __init__(self, master: "MainWindow" = None):
         super().__init__(master)
 
         self.df = None
-        self.pt = None
+        self.pandasFrame = None
         self.master = master
 
-    def load_data_excel(self, path):
-        self.df = pd.read_excel(path)
-        # print(self.df)
-        self.pt = Table(self, dataframe=self.df)
-        self.pt.show()
+        self._init_view()
+
+    @property
+    def main_window(self):
+        return self.master.master
+
+    @property
+    def dataset(self):
+        return self.main_window.engine.dataset
+
+    def load_data_excel(self):
+        self.main_window.engine.read_data_excel()
+        self.update_view()
+
+    def update_view(self):
+        self.pandasFrame.updateModel(TableModel(self.dataset))
+        self.pandasFrame.redraw()
+
+    def _init_view(self):
+        self.pandasFrame = Table(self)
+        self.pandasFrame.show()
         self.update()

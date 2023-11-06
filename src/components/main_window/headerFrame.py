@@ -1,12 +1,11 @@
 import tkinter as tk
 from tkinter import filedialog
 
-from src.components.abstract.customAbstractFrame import HeaderAbstractFrame
-from src.components.main_window.footerFrame import FooterFrame
+from src.components.abstract.abstractFrames import HeaderAbstractFrame
 
 
 class HeaderFrame(HeaderAbstractFrame):
-    def __init__(self, master):
+    def __init__(self, master: "MainWindow"):
         super().__init__(master)
 
         self.read_excel_btn = tk.Button(self, text="Wczytaj dataset")
@@ -15,7 +14,4 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_excel_btn.config(command=self.load_data_excel)
 
     def load_data_excel(self):
-        file = filedialog.askopenfile()
-        print(file.name)
-        ff = FooterFrame()
-        ff.load_data_excel(file.name)
+        self.master.footer.load_data_excel()
