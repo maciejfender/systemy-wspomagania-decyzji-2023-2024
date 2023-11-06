@@ -17,7 +17,7 @@ class PrintDecoratorMeta(type):
         return super(PrintDecoratorMeta, mcs).__new__(mcs, name, bases, attrs)
 
 
-class MainEngine(metaclass=PrintDecoratorMeta):
+class AbstractEngine(metaclass=PrintDecoratorMeta):
     def __init__(self):
         self._callbacks_before = {}
         self._callbacks_after = {}
@@ -42,6 +42,12 @@ class MainEngine(metaclass=PrintDecoratorMeta):
             return
         self._callbacks_after[name].remove(callback)
 
+
+class MainEngine(AbstractEngine):
+
+    def __init__(self) -> None:
+        super().__init__()
+
     def foo(self, a):
         print(f"{a=}")
 
@@ -52,5 +58,5 @@ class MainEngine(metaclass=PrintDecoratorMeta):
 if __name__ == '__main__':
     engine = MainEngine()
     engine.goo()
-    engine.register_callback_after("goo", lambda *args,result, **kwargs: print(result))
+    engine.register_callback_after("goo", lambda *args, result, **kwargs: print(result))
     engine.goo()
