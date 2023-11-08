@@ -66,4 +66,4 @@ class Engine(Triggerable):
         self.dataset = x
 
     def read_data_excel(self):
-        ReadData(self.main_window, self.set_dataset).mainloop()
+        ReadData(self.main_window, self.set_dataset)
