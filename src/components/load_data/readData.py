@@ -15,6 +15,8 @@ class ReadData(tk.Toplevel):
         self.current_frame = None
         self.button_ask_for_path = None
         self.button_next = None
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
         # self.button_ask_for_path.pack()
 
         self.mount()
@@ -28,10 +30,11 @@ class ReadData(tk.Toplevel):
         read_frame = ReadFrame(self)
         self.frames.append(read_frame)
         self.current_frame = read_frame
-        self.current_frame.grid(row=1, column=0)
+        self.current_frame.grid(row=1, column=0, sticky="nsew")
+
 
         self.button_next = tk.Button(self, text="Dalej")
-        self.button_next.grid(sticky='se')
+        self.button_next.grid(row=2, column=0,sticky='se')
 
     def ask_for_path(self):
         path = filedialog.askopenfile()

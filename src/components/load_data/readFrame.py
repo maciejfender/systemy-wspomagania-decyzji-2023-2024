@@ -7,3 +7,7 @@ class ReadFrame(tk.Frame):
 
         label = tk.Label(self, text="Cześć")
         label.pack()
+
+    def show_message_loaded_data(self):
+        label = tk.Label(self, text="Cześć")
+        label.pack()
