@@ -1,6 +1,6 @@
 import functools
 
-from components.engine.engineUtils import CheckData
+from components.load_data.readData import ReadData
 
 
 class PrintDecoratorMeta(type):
@@ -66,4 +66,4 @@ class Engine(Triggerable):
         self.dataset = x
 
     def read_data_excel(self):
-        CheckData(self.main_window, self.set_dataset).mainloop()
+        ReadData(self.main_window, self.set_dataset).mainloop()
