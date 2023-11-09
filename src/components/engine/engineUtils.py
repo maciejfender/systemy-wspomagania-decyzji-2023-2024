@@ -12,7 +12,11 @@ def normal(obj):
     obj.configure(state="normal")
 
 
-def read_to_df(path: str) -> pd.DataFrame:
+def read_to_df(path: str, is_header_set: bool) -> pd.DataFrame:
+    header = 0
+    if not is_header_set:
+        header = None
+
     if path.endswith(".xls") or path.endswith(".xlsx"):
         return pd.read_excel(path)
 

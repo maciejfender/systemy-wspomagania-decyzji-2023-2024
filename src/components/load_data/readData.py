@@ -37,8 +37,9 @@ class ReadData(tk.Toplevel):
         self.append_frame(ReadFrame(self))
 
     def go_to_change_frame(self):
-        self.path = self.current_frame.get_path()
-        self.df = read_to_df(self.path)
+        path = self.current_frame.get_path()
+        header_checked = self.current_frame.is_header_checked()
+        self.df = read_to_df(path, header=header_checked)
         print(self.df)
 
         self.append_frame(ChangeFrame(self, self.df))
