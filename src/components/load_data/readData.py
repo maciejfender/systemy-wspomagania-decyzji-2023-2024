@@ -4,14 +4,7 @@ from src.components.load_data.readFrame import ReadFrame
 from src.components.load_data.changeFrame import ChangeFrame
 from src.components.load_data.confirmFrame import ConfirmFrame
 import pandas as pd
-
-
-def deactivate(obj):
-    obj.configure(state="disabled")
-
-
-def activate(obj):
-    obj.configure(state="active")
+from src.components.engine.engineUtils import activate, deactivate
 
 
 class ReadData(tk.Toplevel):
@@ -65,6 +58,9 @@ class ReadData(tk.Toplevel):
 
         entries = self.current_frame.get_columns_entries()
         self.update_column_names(entries)
+
+        ct = self.current_frame.get_column_types()
+        self.update_data_types(ct)
         print(self.df)
 
         self.append_frame(ConfirmFrame(self, self.df))
@@ -83,7 +79,6 @@ class ReadData(tk.Toplevel):
         self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def go_next(self):
-        self.current_frame = self.frames[-1]
         if isinstance(self.current_frame, ChangeFrame):
             self.go_to_confirm_frame()
         elif isinstance(self.current_frame, ConfirmFrame):
@@ -92,6 +87,12 @@ class ReadData(tk.Toplevel):
     def update_column_names(self, entries):
         new_names = [entry.get() for entry in entries]
         self.df.columns = new_names
+
+    def update_data_types(self, data_types):
+        new_types = {}
+        for i, column in enumerate(self.df.columns.tolist()):
+            new_types[column] = data_types[i].get()
+        self.df = self.df.astype(new_types)
 
     def button_read_from_path(self):
         if not self.path: return
