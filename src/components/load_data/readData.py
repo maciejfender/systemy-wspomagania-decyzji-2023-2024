@@ -9,7 +9,7 @@ class ReadData(tk.Toplevel):
 
     def __init__(self, master, data_setter) -> None:
         super().__init__(master)
-        self.geometry("600x600")
+        self.geometry("600x370")
         self.data_setter = data_setter
         self.path = ""
         self.df = ""
@@ -31,12 +31,10 @@ class ReadData(tk.Toplevel):
         self.button_next.grid(row=1, column=1, sticky='se')
 
         self.append_frame(ReadFrame(self))
-        self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def go_to_read_frame(self):
         self.frames = []
         self.append_frame(ReadFrame(self))
-        self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def go_to_change_frame(self):
         self.path = self.current_frame.get_path()
@@ -44,7 +42,6 @@ class ReadData(tk.Toplevel):
         print(self.df)
 
         self.append_frame(ChangeFrame(self, self.df))
-        self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def go_to_confirm_frame(self):
         entries = self.current_frame.get_columns_entries()
@@ -55,12 +52,12 @@ class ReadData(tk.Toplevel):
         print(self.df)
 
         self.append_frame(ConfirmFrame(self, self.df))
-        self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def append_frame(self, frame):
         self.frames.append(frame)
         self.current_frame = self.frames[-1]
         self.manage_button_states()
+        self.current_frame.grid(row=0, column=0, sticky="nsew", columnspan=2)
         self.current_frame.focus_set()
 
     def go_back(self):
@@ -69,7 +66,7 @@ class ReadData(tk.Toplevel):
             frame_to_delete.destroy()
             self.current_frame = self.frames[-1]
             self.manage_button_states()
-            self.current_frame.grid(row=0, column=0, sticky="nsew")
+            self.current_frame.grid(row=0, column=0, sticky="nsew", columnspan=2)
             self.current_frame.focus_set()
 
             if isinstance(self.current_frame, ChangeFrame):

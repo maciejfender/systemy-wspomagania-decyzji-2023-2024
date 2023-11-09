@@ -28,21 +28,21 @@ class ReadFrame(tk.Frame):
         self.button_ask_for_path = tk.Button(self, text="Wczytaj dane", command=self.ask_for_path)
         self.button_ask_for_path.grid(row=1, column=0, padx=10, pady=10)
 
-        # self.header_checkbox_var = tk.BooleanVar()
-        # self.header_checkbox = tk.Checkbutton(self, text="Czy posiada nagłówek?", variable=self.header_checkbox_var)
-        # self.header_checkbox.grid(row=2, column=0, padx=10, pady=10)
-        #
-        # self.separator_checkbox_var = tk.BooleanVar()
-        # self.separator_checkbox = tk.Checkbutton(self, text="Czy separator?", variable=self.separator_checkbox_var,
-        #                                          command=self.change_separator_entry_state)
-        # self.separator_checkbox.grid(row=3, column=0, padx=10, pady=10)
-        #
-        # self.separator_label = tk.Label(self, text="Separator")
-        # self.separator_label.grid(row=4, column=0, padx=10, pady=10)
-        #
-        # self.separator_entry = tk.Entry(master=self)
-        # deactivate(self.separator_entry)
-        # self.separator_entry.grid(row=5, column=0, padx=10, pady=10)
+        self.header_checkbox_var = tk.BooleanVar()
+        self.header_checkbox = tk.Checkbutton(self, text="Czy posiada nagłówek?", variable=self.header_checkbox_var)
+        self.header_checkbox.grid(row=2, column=0, padx=10, pady=10)
+
+        self.separator_checkbox_var = tk.BooleanVar()
+        self.separator_checkbox = tk.Checkbutton(self, text="Czy separator?", variable=self.separator_checkbox_var,
+                                                 command=self.change_separator_entry_state)
+        self.separator_checkbox.grid(row=3, column=0, padx=10, pady=10)
+
+        self.separator_label = tk.Label(self, text="Separator")
+        self.separator_label.grid(row=4, column=0, padx=10, pady=10)
+
+        self.separator_entry = tk.Entry(master=self)
+        deactivate(self.separator_entry)
+        self.separator_entry.grid(row=5, column=0, padx=10, pady=10)
 
     def show_message_loaded_data(self):
         label = tk.Label(self, text="Wczytano dane")

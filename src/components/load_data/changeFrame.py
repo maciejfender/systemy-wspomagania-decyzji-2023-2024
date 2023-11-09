@@ -14,14 +14,14 @@ class ChangeFrame(tk.Frame):
         self.columns_types = []
         self.types_var = {}
 
-        self.grid_rowconfigure(1, weight=1)
-        self.grid_columnconfigure(0, weight=1)
+        #self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
 
         self.mount()
 
     def mount(self):
         self.label = tk.Label(self, text="Kolumny w pliku")
-        self.label.grid(row=0, column=0, padx=10, pady=10, sticky='n')
+        self.label.grid(row=0, column=0, padx=10, pady=10, sticky='n', columnspan=2)
 
         self.columns = self.df.columns.tolist()
         print(self.columns)
@@ -38,8 +38,8 @@ class ChangeFrame(tk.Frame):
             self.columns_types.append(column_type)
 
         for i, entry in enumerate(self.columns_entries):
-            entry.grid(row=1 + i, column=0, sticky='nw')
-            self.columns_types[i].grid(row=1 + i, column=1, sticky='w')
+            entry.grid(row=1 + i, column=0, sticky='w', padx=10, pady=0)
+            self.columns_types[i].grid(row=1 + i, column=1, sticky='w', padx=10, pady=0)
 
     def get_df(self):
         return self.df
