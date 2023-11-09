@@ -32,7 +32,6 @@ class ChangeFrame(tk.Frame):
             self.columns_entries.append(entry)
 
             self.types_var[column] = tk.StringVar()
-            print('a ', self.types_var[column].get())
             column_type = ttk.Combobox(self, textvariable=self.types_var[column],
                                        values=["int64", "float64", "object", "string"])
             column_type.set("string")

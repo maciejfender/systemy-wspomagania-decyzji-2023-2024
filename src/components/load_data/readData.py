@@ -24,27 +24,21 @@ class ReadData(tk.Toplevel):
         self.mount()
 
     def mount(self):
-        self.append_frame(ReadFrame(self))
-        self.current_frame.grid(row=0, column=0, sticky="nsew")
-
         self.button_back = tk.Button(self, text="Wstecz", command=self.go_back)
         self.button_back.grid(row=1, column=0, sticky='se')
-        deactivate(self.button_back)
 
         self.button_next = tk.Button(self, text="Dalej", command=self.go_next)
         self.button_next.grid(row=1, column=1, sticky='se')
-        deactivate(self.button_next)
+
+        self.append_frame(ReadFrame(self))
+        self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def go_to_read_frame(self):
-        deactivate(self.button_back)
-        deactivate(self.button_next)
         self.frames = []
         self.append_frame(ReadFrame(self))
+        self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def go_to_change_frame(self):
-        activate(self.button_back)
-        activate(self.button_next)
-
         self.path = self.current_frame.get_path()
         self.df = read_to_df(self.path)
         print(self.df)
@@ -53,9 +47,6 @@ class ReadData(tk.Toplevel):
         self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def go_to_confirm_frame(self):
-        activate(self.button_back)
-        activate(self.button_next)
-
         entries = self.current_frame.get_columns_entries()
         self.update_column_names(entries)
 
@@ -69,13 +60,24 @@ class ReadData(tk.Toplevel):
     def append_frame(self, frame):
         self.frames.append(frame)
         self.current_frame = self.frames[-1]
+        self.manage_button_states()
         self.current_frame.focus_set()
 
     def go_back(self):
-        frame_to_delete = self.frames.pop()
-        frame_to_delete.destroy()
-        self.current_frame = self.frames[-1]
-        self.current_frame.grid(row=0, column=0, sticky="nsew")
+        if len(self.frames) != 0:
+            frame_to_delete = self.frames.pop()
+            frame_to_delete.destroy()
+            self.current_frame = self.frames[-1]
+            self.manage_button_states()
+            self.current_frame.grid(row=0, column=0, sticky="nsew")
+            self.current_frame.focus_set()
+
+            if isinstance(self.current_frame, ChangeFrame):
+                print("ChangeFrame")
+            elif isinstance(self.current_frame, ConfirmFrame):
+                print("ConfirmFrame")
+            elif isinstance(self.current_frame, ReadFrame):
+                print("ReadFrame")
 
     def go_next(self):
         if isinstance(self.current_frame, ChangeFrame):
@@ -104,3 +106,14 @@ class ReadData(tk.Toplevel):
     @property
     def engine(self):
         return self.master
+
+    def manage_button_states(self):
+        if isinstance(self.current_frame, ChangeFrame):
+            activate(self.button_back)
+            activate(self.button_next)
+        elif isinstance(self.current_frame, ConfirmFrame):
+            activate(self.button_back)
+            activate(self.button_next)
+        elif isinstance(self.current_frame, ReadFrame):
+            deactivate(self.button_back)
+            deactivate(self.button_next)
