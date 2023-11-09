@@ -21,8 +21,8 @@ class FooterFrame(CustomAbstractFrame):
     def dataset(self):
         return self.main_window.engine.dataset
 
-    def load_data_excel(self):
-        self.main_window.engine.read_data_excel()
+    def load_data(self):
+        self.main_window.engine.read_data()
         self.update_view()
 
     def update_view(self):

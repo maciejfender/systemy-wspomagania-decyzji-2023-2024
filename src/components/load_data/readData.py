@@ -1,10 +1,8 @@
 import tkinter as tk
-from tkinter import filedialog
 from src.components.load_data.readFrame import ReadFrame
 from src.components.load_data.changeFrame import ChangeFrame
 from src.components.load_data.confirmFrame import ConfirmFrame
-import pandas as pd
-from src.components.engine.engineUtils import activate, deactivate
+from src.components.engine.engineUtils import activate, deactivate, read_to_df
 
 
 class ReadData(tk.Toplevel):
@@ -38,6 +36,8 @@ class ReadData(tk.Toplevel):
         deactivate(self.button_next)
 
     def go_to_read_frame(self):
+        deactivate(self.button_back)
+        deactivate(self.button_next)
         self.frames = []
         self.append_frame(ReadFrame(self))
 
@@ -46,7 +46,7 @@ class ReadData(tk.Toplevel):
         activate(self.button_next)
 
         self.path = self.current_frame.get_path()
-        self.df = pd.read_excel(self.path)
+        self.df = read_to_df(self.path)
         print(self.df)
 
         self.append_frame(ChangeFrame(self, self.df))
@@ -75,7 +75,6 @@ class ReadData(tk.Toplevel):
         frame_to_delete = self.frames.pop()
         frame_to_delete.destroy()
         self.current_frame = self.frames[-1]
-
         self.current_frame.grid(row=0, column=0, sticky="nsew")
 
     def go_next(self):
@@ -101,3 +100,7 @@ class ReadData(tk.Toplevel):
         self.master.footer.update_view()
         self.destroy()
         self.update()
+
+    @property
+    def engine(self):
+        return self.master

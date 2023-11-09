@@ -1,5 +1,5 @@
 import functools
-
+import pandas as pd
 from components.load_data.readData import ReadData
 
 
@@ -65,5 +65,7 @@ class Engine(Triggerable):
     def set_dataset(self, x):
         self.dataset = x
 
-    def read_data_excel(self):
+    def read_data(self):
         ReadData(self.main_window, self.set_dataset)
+
+

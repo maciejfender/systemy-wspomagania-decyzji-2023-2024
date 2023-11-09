@@ -1,6 +1,3 @@
-import tkinter as tk
-from tkinter import filedialog
-
 import pandas as pd
 
 
@@ -10,3 +7,7 @@ def deactivate(obj):
 
 def activate(obj):
     obj.configure(state="active")
+
+
+def read_to_df(path):
+    return pd.read_excel(path)
