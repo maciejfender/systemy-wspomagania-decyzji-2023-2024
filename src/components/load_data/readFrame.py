@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from src.components.engine.engineUtils import normal, deactivate
 
+
 class ReadFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
@@ -22,6 +23,7 @@ class ReadFrame(tk.Frame):
         self.mount()
 
     def mount(self):
+        self.focus_set()
         self.label = tk.Label(self, text="Wczytywanie danych")
         self.label.grid(row=0, column=0, padx=10, pady=10)
 
@@ -63,13 +65,16 @@ class ReadFrame(tk.Frame):
         return self.path
 
     def is_header_checked(self):
-        self.header_checkbox_var.get()
+        return self.header_checkbox_var.get()
 
     def is_separator_checked(self):
-        self.header_checkbox_var.get()
+        return self.separator_checkbox_var.get()
+
+    def get_separator(self):
+        return self.separator_entry.get()
 
     def change_separator_entry_state(self):
-        if self.is_separator_checked():
+        if not self.is_separator_checked():
             deactivate(self.separator_entry)
         else:
             normal(self.separator_entry)

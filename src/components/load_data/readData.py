@@ -39,7 +39,10 @@ class ReadData(tk.Toplevel):
     def go_to_change_frame(self):
         path = self.current_frame.get_path()
         header_checked = self.current_frame.is_header_checked()
-        self.df = read_to_df(path, header=header_checked)
+        separator_checked = self.current_frame.is_separator_checked()
+        separator = self.current_frame.get_separator()
+
+        self.df = read_to_df(path, header_checked=header_checked, separator_checked=separator_checked, separator=separator)
         print(self.df)
 
         self.append_frame(ChangeFrame(self, self.df))
@@ -94,8 +97,6 @@ class ReadData(tk.Toplevel):
         self.df = self.df.astype(new_types)
 
     def button_read_from_path(self):
-        if not self.path: return
-
         self.data_setter(self.df)
         self.master.footer.update_view()
         self.destroy()
