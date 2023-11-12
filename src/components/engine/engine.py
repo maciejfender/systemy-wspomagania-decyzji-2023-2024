@@ -1,5 +1,5 @@
 import functools
-import pandas as pd
+from components.graphs.graphDialog import GraphDialog
 from components.load_data.readData import ReadData
 
 
@@ -65,7 +65,11 @@ class Engine(Triggerable):
     def set_dataset(self, x):
         self.dataset = x
 
+    def get_dataset(self):
+        return self.dataset
+
     def read_data(self):
         ReadData(self.main_window, self.set_dataset)
 
-
+    def graph_dialog(self):
+        GraphDialog(self.main_window, self.dataset, self.main_window.center_panel.temp.set_data)

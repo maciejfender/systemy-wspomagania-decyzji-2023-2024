@@ -1,17 +1,35 @@
 import tkinter as tk
 
 from components.abstract.abstractFrames import CustomAbstractFrame
+from components.graphs.graph2d import Graph2D
+from components.graphs.graphSettings import GraphSettings
 
 
 class CenterPanel(CustomAbstractFrame):
 
     def __init__(self, master) -> None:
         super().__init__(master)
-        paned_window = tk.PanedWindow(self, orient=tk.HORIZONTAL)
-        paned_window.pack(fill=tk.BOTH, expand=True)
+        self.paned_window = tk.PanedWindow(self, orient=tk.HORIZONTAL)
+        self.paned_window.pack(fill=tk.BOTH, expand=True)
 
-        self.center = tk.Frame(paned_window, background="red")
-        self.right = tk.Frame(paned_window, background="blue")
+        self.left = GraphSettings(self.paned_window, background="gray", width=200)
+        self.center = tk.Frame(self.paned_window, background="blue", height=200)
+        self.temp = None
 
-        paned_window.add(self.center)
-        paned_window.add(self.right)
+        self.paned_window.add(self.left)
+        self.paned_window.add(self.center)
+
+    def set_and_mount_graph_2d(self):
+        self.temp = Graph2D(self.paned_window, height=200)
+        self.main_window.engine.graph_dialog()
+
+    def mount_graph_2d(self):
+        self.center.destroy()
+        self.center = self.temp
+        self.center.mount()
+        self.paned_window.add(self.center)
+        self.paned_window.update()
+
+    @property
+    def main_window(self):
+        return self.master.master.master

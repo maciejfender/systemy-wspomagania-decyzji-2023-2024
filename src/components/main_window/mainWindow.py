@@ -29,12 +29,16 @@ class MainWindow(tk.Tk):
         return self.center_and_lower_compound_panel.footer
 
     @property
+    def center_panel(self):
+        return self.center_and_lower_compound_panel.center_panel
+
+    @property
     def center(self):
         return self.center_and_lower_compound_panel.center_panel.center
 
     @property
-    def right(self):
-        return self.center_and_lower_compound_panel.center_panel.right
+    def left(self):
+        return self.center_and_lower_compound_panel.center_panel.left
 
     @property
     def header(self):
