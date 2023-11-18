@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-from src.components.engine.engineUtils import normal, deactivate
+from src.components.engine.engineUtils import normal, deactivate, activate
 
 
 class ReadFrame(tk.Frame):
@@ -48,7 +48,10 @@ class ReadFrame(tk.Frame):
 
     def show_message_loaded_data(self):
         label = tk.Label(self, text="Wczytano dane")
-        label.grid(row=0, column=0, padx=10, pady=10)
+        self.label.destroy()
+        self.label = label
+        self.label.grid(row=0, column=0, padx=10, pady=10)
+        self.update()
 
     def ask_for_path(self):
         path = filedialog.askopenfile()
@@ -58,8 +61,9 @@ class ReadFrame(tk.Frame):
         self.path = path.name
 
         self.show_message_loaded_data()
-        self.master.focus_set()
-        self.master.go_to_change_frame()
+        #self.master.focus_set()
+        activate(self.master.button_next)
+        #self.master.go_to_change_frame()
 
     def get_path(self):
         return self.path

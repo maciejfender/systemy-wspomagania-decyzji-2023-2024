@@ -85,6 +85,8 @@ class ReadData(tk.Toplevel):
             self.go_to_confirm_frame()
         elif isinstance(self.current_frame, ConfirmFrame):
             self.button_read_from_path()
+        elif isinstance(self.current_frame, ReadFrame):
+            self.go_to_change_frame()
 
     def update_column_names(self, entries):
         new_names = [entry.get() for entry in entries]
