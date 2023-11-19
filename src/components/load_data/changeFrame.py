@@ -13,13 +13,17 @@ class ChangeFrame(tk.Frame):
         self.columns_entries = []
         self.columns_types = []
         self.types_var = {}
+        self.scrollbar = None  # TODO scrollbar
+        self.scrollable_frame = None  # TODO scrollbar
+        self.canvas = None  # TODO scrollbar
 
-        #self.grid_rowconfigure(0, weight=1)
+        # self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
         self.mount()
 
     def mount(self):
+
         self.label = tk.Label(self, text="Kolumny w pliku")
         self.label.grid(row=0, column=0, padx=10, pady=10, sticky='n', columnspan=2)
 

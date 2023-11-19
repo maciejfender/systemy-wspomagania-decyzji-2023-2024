@@ -28,7 +28,7 @@ def read_to_df(path: str, header_checked=False, separator_checked=False, separat
         return read_txt(path, sep, header)
 
     if path.lower().endswith(".xls") or path.lower().endswith(".xlsx"):
-        return pd.read_excel(path)
+        return pd.read_excel(path, header=header)
 
     if path.lower().endswith(".csv") or path.lower().endswith(".tsv"):
         return pd.read_csv(path, sep=sep, header=header)

@@ -61,9 +61,7 @@ class ReadFrame(tk.Frame):
         self.path = path.name
 
         self.show_message_loaded_data()
-        #self.master.focus_set()
         activate(self.master.button_next)
-        #self.master.go_to_change_frame()
 
     def get_path(self):
         return self.path
