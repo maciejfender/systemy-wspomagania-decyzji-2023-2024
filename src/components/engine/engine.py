@@ -2,8 +2,10 @@ import functools
 from components.graphs.graphDialog2d import GraphDialog2d
 from components.graphs.graphDialog3d import GraphDialog3d
 from components.load_data.readData import ReadData
-from components.discretization.discretizationDialog import DiscretizationDialog
+from components.header_utils.discretizationDialog import DiscretizationDialog
+from components.header_utils.rangeDialog import RangeDialog
 import pandas as pd
+
 
 class PrintDecoratorMeta(type):
     def __new__(mcs, name, bases, attrs):
@@ -81,7 +83,7 @@ class Engine(Triggerable):
         bins_list = [float(element) for element in bins_list]
         labels_list = labels.replace(" ", "").split(",")
 
-        df[column+' - Dyskr'] = pd.cut(df[column], bins=bins_list, labels=labels_list)
+        df[column + ' - Dyskr'] = pd.cut(df[column], bins=bins_list, labels=labels_list)
 
         self.dataset = df
 
@@ -93,9 +95,17 @@ class Engine(Triggerable):
 
     def graph_3d_dialog(self):
         GraphDialog3d(self.main_window, self.dataset, self.main_window.center_panel.temp.set_data)
-    
+
     def discretization_dialog(self):
         DiscretizationDialog(self.main_window, self.dataset, self.add_discretization)
 
     def df_to_original(self):
         self.dataset = pd.DataFrame(self.dataset_original)
+
+    def min_max(self, column: str, lower_bound: str, upper_bound: str):
+        lower = float(lower_bound)
+        upper = float(upper_bound)
+        self.dataset = self.dataset[(self.dataset[column] >= lower) & (self.dataset[column] <= upper)]
+
+    def min_max_dialog(self):
+        DiscretizationDialog(self.main_window, self.dataset, self.min_max)

@@ -23,9 +23,23 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.config(command=self.discretization)
         self.read_btn.grid(row=0, column=4, sticky="ne")
 
-        self.read_btn = tk.Button(self, text="Przywróć dane")
+        # TODO histogram
+        self.read_btn = tk.Button(self, text="Histogram")
         self.read_btn.config(command=self.orignal_data)
         self.read_btn.grid(row=0, column=5, sticky="ne")
+
+        # TODO normalizacja
+        self.read_btn = tk.Button(self, text="Normalizacja")
+        self.read_btn.config(command=self.orignal_data)
+        self.read_btn.grid(row=0, column=6, sticky="ne")
+
+        self.read_btn = tk.Button(self, text="Wybierz zakres")
+        self.read_btn.config(command=self.min_max)
+        self.read_btn.grid(row=0, column=7, sticky="ne")
+
+        self.read_btn = tk.Button(self, text="Przywróć dane")
+        self.read_btn.config(command=self.orignal_data)
+        self.read_btn.grid(row=0, column=8, sticky="ne")
 
     def load_data(self):
         self.master.footer.load_data()
@@ -38,6 +52,9 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def discretization(self):
         self.master.engine.discretization_dialog()
+
+    def min_max(self):
+        self.master.engine.min_max_dialog()
 
     def orignal_data(self):
         self.master.engine.df_to_original()
