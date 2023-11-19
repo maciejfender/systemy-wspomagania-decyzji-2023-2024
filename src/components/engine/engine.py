@@ -67,7 +67,7 @@ class Engine(Triggerable):
 
     def set_dataset(self, x):
         if self.dataset_original is None:
-            self.dataset_original = x
+            self.dataset_original = pd.DataFrame(x)
 
         self.dataset = x
 
@@ -96,3 +96,6 @@ class Engine(Triggerable):
     
     def discretization_dialog(self):
         DiscretizationDialog(self.main_window, self.dataset, self.add_discretization)
+
+    def df_to_original(self):
+        self.dataset = pd.DataFrame(self.dataset_original)
