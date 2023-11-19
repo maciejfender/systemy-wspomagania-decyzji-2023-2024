@@ -28,9 +28,8 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.config(command=self.orignal_data)
         self.read_btn.grid(row=0, column=5, sticky="ne")
 
-        # TODO normalizacja
         self.read_btn = tk.Button(self, text="Normalizacja")
-        self.read_btn.config(command=self.orignal_data)
+        self.read_btn.config(command=self.normalization)
         self.read_btn.grid(row=0, column=6, sticky="ne")
 
         self.read_btn = tk.Button(self, text="Wybierz zakres")
@@ -52,6 +51,9 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def discretization(self):
         self.master.engine.discretization_dialog()
+
+    def normalization(self):
+        self.master.engine.normalization_dialog()
 
     def min_max(self):
         self.master.engine.min_max_dialog()

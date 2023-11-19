@@ -4,6 +4,7 @@ from components.graphs.graphDialog3d import GraphDialog3d
 from components.load_data.readData import ReadData
 from components.header_utils.discretizationDialog import DiscretizationDialog
 from components.header_utils.rangeDialog import RangeDialog
+from components.header_utils.normalizationDialog import NormalizationDialog
 import pandas as pd
 
 
@@ -108,4 +109,13 @@ class Engine(Triggerable):
         self.dataset = self.dataset[(self.dataset[column] >= lower) & (self.dataset[column] <= upper)]
 
     def min_max_dialog(self):
-        DiscretizationDialog(self.main_window, self.dataset, self.min_max)
+        RangeDialog(self.main_window, self.dataset, self.min_max)
+
+    def normalization(self, column):
+        df = self.dataset
+        df[column + ' - Norm'] = (df[column] - df[column].mean()) / df[column].std()
+
+        self.dataset = df
+
+    def normalization_dialog(self):
+        NormalizationDialog(self.main_window, self.dataset, self.normalization)
