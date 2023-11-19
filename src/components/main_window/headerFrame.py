@@ -20,8 +20,8 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.grid(row=0, column=3, sticky="ne")
 
         self.read_btn = tk.Button(self, text="Dyskryminacja zmiennej")
-        self.read_btn.config(command=self.graph_3d)
-        self.read_btn.grid(row=0, column=3, sticky="ne")
+        self.read_btn.config(command=self.discretization)
+        self.read_btn.grid(row=0, column=4, sticky="ne")
 
 
     def load_data(self):
@@ -33,6 +33,5 @@ class HeaderFrame(HeaderAbstractFrame):
     def graph_3d(self):
         self.master.center_panel.set_and_mount_graph_3d()
 
-    def graph_3d(self):
-        self.master.center_panel.discretization()
-        
+    def discretization(self):
+        self.master.engine.discretization_dialog()

@@ -2,7 +2,8 @@ import functools
 from components.graphs.graphDialog2d import GraphDialog2d
 from components.graphs.graphDialog3d import GraphDialog3d
 from components.load_data.readData import ReadData
-
+from components.discretization.discretizationDialog import DiscretizationDialog
+import pandas as pd
 
 class PrintDecoratorMeta(type):
     def __new__(mcs, name, bases, attrs):
@@ -60,14 +61,29 @@ class Engine(Triggerable):
         super().__init__()
         self.main_window = main_window
         self.dataset = None
+        self.dataset_original = None
 
         # self.register_callback_after(self.set_dataset, self.main_window.footer.update_view)
 
     def set_dataset(self, x):
+        if self.dataset_original is None:
+            self.dataset_original = x
+
         self.dataset = x
 
     def get_dataset(self):
         return self.dataset
+
+    def add_discretization(self, column: str, bins: str, labels: str):
+        df = self.dataset
+
+        bins_list = bins.replace(" ", "").split(",")
+        bins_list = [float(element) for element in bins_list]
+        labels_list = labels.replace(" ", "").split(",")
+
+        df[column+' - Dyskr'] = pd.cut(df[column], bins=bins_list, labels=labels_list)
+
+        self.dataset = df
 
     def read_data(self):
         ReadData(self.main_window, self.set_dataset)
@@ -77,3 +93,6 @@ class Engine(Triggerable):
 
     def graph_3d_dialog(self):
         GraphDialog3d(self.main_window, self.dataset, self.main_window.center_panel.temp.set_data)
+    
+    def discretization_dialog(self):
+        DiscretizationDialog(self.main_window, self.dataset, self.add_discretization)
