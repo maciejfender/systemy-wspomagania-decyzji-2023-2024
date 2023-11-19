@@ -4,39 +4,32 @@ from matplotlib.figure import Figure
 import numpy as np
 
 
-class Graph2D(tk.Frame):
+class Graph3D(tk.Frame):
     def __init__(self, master, width=0, height=0):
         super().__init__(master, width=width, height=height)
-        self.data = None
+        self.data = []
         # self.mount()
 
     def mount(self):
         df = self.main_window.engine.get_dataset()
+        x = df[self.data[0]]
+        y = df[self.data[1]]
+        z = df[self.data[2]]
 
         fig = Figure(figsize=(5, 4), dpi=100)
-        ax = fig.add_subplot(111)
-        # x = [1, 2, 3, 4, 5]
-        # y = [2, 3, 5, 7, 11]
-        x = None
-        if self.data[0] == '':
-            x = np.linspace(1, df.shape[0], df.shape[0], endpoint=True)
-        else:
-            x = df[self.data[0]].values
+        plot = fig.add_subplot(111, projection='3d')
+        plot.plot(x, y, z, label='Liniowy wykres 3D', linewidth=2)
 
-        for column in self.data[1]:
-            y = df[column].values
-            ax.plot(x, y)
-            ax.set_xlabel(self.data[0])
-            ax.set_ylabel('Series')
+        plot.set_xlabel(self.data[0])
+        plot.set_ylabel(self.data[1])
+        plot.set_zlabel(self.data[2])
 
-
-        # Dodaj wykres do ramki Tkinter
         canvas = FigureCanvasTkAgg(fig, master=self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-    def set_data(self, data):
-        self.data = data
+    def set_data(self, x, y, z):
+        self.data = [x, y, z]
 
     @property
     def main_window(self):

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class GraphDialog(tk.Toplevel):
+class GraphDialog2d(tk.Toplevel):
 
     def __init__(self, master, df, data_setter) -> None:
         super().__init__(master)

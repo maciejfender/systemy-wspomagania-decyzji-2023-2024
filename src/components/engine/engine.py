@@ -1,5 +1,6 @@
 import functools
-from components.graphs.graphDialog import GraphDialog
+from components.graphs.graphDialog2d import GraphDialog2d
+from components.graphs.graphDialog3d import GraphDialog3d
 from components.load_data.readData import ReadData
 
 
@@ -71,5 +72,8 @@ class Engine(Triggerable):
     def read_data(self):
         ReadData(self.main_window, self.set_dataset)
 
-    def graph_dialog(self):
-        GraphDialog(self.main_window, self.dataset, self.main_window.center_panel.temp.set_data)
+    def graph_2d_dialog(self):
+        GraphDialog2d(self.main_window, self.dataset, self.main_window.center_panel.temp.set_data)
+
+    def graph_3d_dialog(self):
+        GraphDialog3d(self.main_window, self.dataset, self.main_window.center_panel.temp.set_data)

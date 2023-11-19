@@ -11,12 +11,28 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.config(command=self.load_data)
         self.read_btn.grid(row=0, column=1, sticky="ne")
 
-        self.read_btn = tk.Button(self, text="Wykres byczq liniowy")
+        self.read_btn = tk.Button(self, text="Wykres 2D")
         self.read_btn.config(command=self.graph_2d)
         self.read_btn.grid(row=0, column=2, sticky="ne")
+
+        self.read_btn = tk.Button(self, text="Wykres 3D")
+        self.read_btn.config(command=self.graph_3d)
+        self.read_btn.grid(row=0, column=3, sticky="ne")
+
+        self.read_btn = tk.Button(self, text="Dyskryminacja zmiennej")
+        self.read_btn.config(command=self.graph_3d)
+        self.read_btn.grid(row=0, column=3, sticky="ne")
+
 
     def load_data(self):
         self.master.footer.load_data()
 
     def graph_2d(self):
         self.master.center_panel.set_and_mount_graph_2d()
+
+    def graph_3d(self):
+        self.master.center_panel.set_and_mount_graph_3d()
+
+    def graph_3d(self):
+        self.master.center_panel.discretization()
+        
