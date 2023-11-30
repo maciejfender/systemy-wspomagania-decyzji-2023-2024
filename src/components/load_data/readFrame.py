@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import filedialog
 from src.components.engine.engineUtils import normal, deactivate, activate
 
+DEFAULT_SEPARATOR = ','
+
 
 class ReadFrame(tk.Frame):
     def __init__(self, master):
@@ -30,11 +32,11 @@ class ReadFrame(tk.Frame):
         self.button_ask_for_path = tk.Button(self, text="Wczytaj dane", command=self.ask_for_path)
         self.button_ask_for_path.grid(row=1, column=0, padx=10, pady=10)
 
-        self.header_checkbox_var = tk.BooleanVar()
+        self.header_checkbox_var = tk.BooleanVar(value=True)
         self.header_checkbox = tk.Checkbutton(self, text="Czy posiada nagłówek?", variable=self.header_checkbox_var)
         self.header_checkbox.grid(row=2, column=0, padx=10, pady=10)
 
-        self.separator_checkbox_var = tk.BooleanVar()
+        self.separator_checkbox_var = tk.BooleanVar(value=True)
         self.separator_checkbox = tk.Checkbutton(self, text="Czy separator?", variable=self.separator_checkbox_var,
                                                  command=self.change_separator_entry_state)
         self.separator_checkbox.grid(row=3, column=0, padx=10, pady=10)
@@ -43,7 +45,9 @@ class ReadFrame(tk.Frame):
         self.separator_label.grid(row=4, column=0, padx=10, pady=10)
 
         self.separator_entry = tk.Entry(master=self)
-        deactivate(self.separator_entry)
+        # deactivate(self.separator_entry)
+        self.activate_separator_entry()
+
         self.separator_entry.grid(row=5, column=0, padx=10, pady=10)
 
     def show_message_loaded_data(self):
@@ -79,4 +83,9 @@ class ReadFrame(tk.Frame):
         if not self.is_separator_checked():
             deactivate(self.separator_entry)
         else:
-            normal(self.separator_entry)
+            self.activate_separator_entry()
+
+    def activate_separator_entry(self):
+        normal(self.separator_entry)
+        if not self.separator_entry.get():
+            self.separator_entry.insert(0, DEFAULT_SEPARATOR)

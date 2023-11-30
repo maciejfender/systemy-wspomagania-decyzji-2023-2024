@@ -13,30 +13,48 @@ class ChangeFrame(tk.Frame):
         self.columns_entries = []
         self.columns_types = []
         self.types_var = {}
-        self.scrollbar = None  # TODO scrollbar
-        self.scrollable_frame = None  # TODO scrollbar
-        self.canvas = None  # TODO scrollbar
-
+        self.canvas = None
+        self.frame_for_content = None
         # self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
+        # self.grid_columnconfigure(1, weight=1)
 
         self.mount()
 
+    def on_configure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox('all'))
+
+
     def mount(self):
 
-        self.label = tk.Label(self, text="Kolumny w pliku")
+        self.canvas = tk.Canvas(self)
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Add a scrollbar
+        scrollbar = tk.Scrollbar(self, command=self.canvas.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+
+        # Bind the canvas to the scrollbar
+        self.canvas.bind('<Configure>', self.on_configure)
+
+        # Create a frame inside the canvas
+        self.frame_for_content = tk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.frame_for_content, anchor='nw')
+
+        self.label = tk.Label(self.frame_for_content, text="Kolumny w pliku: wybór typów")
         self.label.grid(row=0, column=0, padx=10, pady=10, sticky='n', columnspan=2)
 
         self.columns = self.df.columns.tolist()
         print(self.columns)
 
-        for column in self.columns:
-            entry = tk.Entry(master=self)
-            entry.insert(0, column)  # Wypełnij pole obecną nazwą kolumny
+        for column in list(self.columns):
+            entry = tk.Entry(master=self.frame_for_content)
+            entry.insert(0, column)
             self.columns_entries.append(entry)
 
             self.types_var[column] = tk.StringVar()
-            column_type = ttk.Combobox(self, textvariable=self.types_var[column],
+            column_type = ttk.Combobox(self.frame_for_content, textvariable=self.types_var[column],
                                        values=["int64", "float64", "object", "string"])
             column_type.set("string")
             self.columns_types.append(column_type)
