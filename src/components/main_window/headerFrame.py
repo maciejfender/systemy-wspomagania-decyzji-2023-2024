@@ -23,7 +23,6 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.config(command=self.discretization)
         self.read_btn.grid(row=0, column=4, sticky="ne")
 
-        # TODO histogram
         self.read_btn = tk.Button(self, text="Histogram")
         self.read_btn.config(command=self.orignal_data)
         self.read_btn.grid(row=0, column=5, sticky="ne")
@@ -32,7 +31,7 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.config(command=self.normalization)
         self.read_btn.grid(row=0, column=6, sticky="ne")
 
-        self.read_btn = tk.Button(self, text="Wybierz zakres")
+        self.read_btn = tk.Button(self, text="Zmień rozkład danych")
         self.read_btn.config(command=self.min_max)
         self.read_btn.grid(row=0, column=7, sticky="ne")
 
