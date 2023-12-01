@@ -9,6 +9,16 @@ class Graph2D(tk.Frame):
         super().__init__(master, width=width, height=height)
         self.data = None
         self.scatter_or_plot = None
+        self.colors = ['#ff007f', '#001f3f', '#800080', '#01ff70', '#ff6300', '#00A86B']
+        self.color_dict = {
+            'Ciemnoniebieski':  '#001f3f',
+            'Jasnopoziomkowy':  '#ff007f',
+            'Zielony limonkowy':  '#01ff70',
+            'Ciemnofioletowy':  '#800080',
+            'Pomarańczowy':  '#ff6300',
+            'Jadeitowy': '#00A86B'
+        }
+        self.markers = ['o', 'x', '+', '1', 'D', '^']
         # self.mount()
 
     def mount(self):
@@ -24,12 +34,12 @@ class Graph2D(tk.Frame):
         else:
             x = df[self.data[0]].values
 
-        for column in self.data[1]:
+        for idx, column in enumerate(self.data[1]):
             y = df[column].values
             if self.scatter_or_plot == 'punkty':
-                ax.scatter(x, y)
+                ax.scatter(x, y, color=self.colors[idx], marker=self.markers[idx])
             else:
-                ax.plot(x, y)
+                ax.plot(x, y, color=self.colors[idx])
             ax.set_xlabel(self.data[0])
             ax.set_ylabel('Series')
 
@@ -39,7 +49,16 @@ class Graph2D(tk.Frame):
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-    def set_data(self, data, scatter_or_plot):
+    def set_data(self, data, scatter_or_plot, color_names, markers):
+        colors = []
+
+        for color_name in color_names:
+            colors.append(self.color_dict[color_name])
+
+        if colors:
+            self.colors = colors
+        if markers:
+            self.markers = markers
         self.scatter_or_plot = scatter_or_plot
         self.data = data
 

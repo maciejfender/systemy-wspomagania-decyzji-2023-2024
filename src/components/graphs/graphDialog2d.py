@@ -17,6 +17,11 @@ class GraphDialog2d(tk.Toplevel):
         self.type_var = None
         self.scatter_or_plot = None
         self.scatter_or_plot_var = None
+        self.color_names = ['Jasnopoziomkowy', 'Ciemnoniebieski', 'Ciemnofioletowy', 'Zielony limonkowy',
+                            'Pomarańczowy', 'Jadeitowy']
+        self.color_names_selected = []
+        self.markers = ['o', 'x', '+', '1', 'D', '^']
+        self.markers_selected = []
 
         self.mount()
 
@@ -43,13 +48,39 @@ class GraphDialog2d(tk.Toplevel):
             checkbox.grid(row=i + 2, column=0, sticky='nw')
             self.checkboxes.append(checkbox)
 
+            color_var = tk.StringVar()
+            color_combobox = ttk.Combobox(self, textvariable=color_var,
+                                          values=self.color_names)
+            color_combobox.grid(row=i + 2, column=1, sticky='nw')
+
+            self.color_names_selected.append(color_var)
+
+            marker_var = tk.StringVar()
+            marker_combobox = ttk.Combobox(self, textvariable=marker_var,
+                                           values=self.markers)
+            marker_combobox.grid(row=i + 2, column=2, sticky='nw')
+
+            self.markers_selected.append(marker_var)
+
         self.button = tk.Button(self, text="Dalej")
         self.button.config(command=self.get_graph_params_and_destroy)
         self.button.grid(row=len(numeric_columns) + 2, column=0, sticky="ne")
 
     def get_graph_params_and_destroy(self):
+        colors = []
+
+        for color in self.color_names_selected:
+            if color.get() != '':
+                colors.append(color.get())
+
+        markers = []
+
+        for marker in self.markers_selected:
+            if marker.get() != '':
+                markers.append(marker.get())
+
         selected_series = self.get_selected_series()
-        self.data_setter((self.type_var.get(), selected_series), self.scatter_or_plot_var.get())
+        self.data_setter((self.type_var.get(), selected_series), self.scatter_or_plot_var.get(), colors, markers)
         self.master.center_panel.mount_graph_2d()
         self.destroy()
         self.update()

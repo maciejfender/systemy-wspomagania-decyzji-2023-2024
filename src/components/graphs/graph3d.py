@@ -8,6 +8,7 @@ class Graph3D(tk.Frame):
     def __init__(self, master, width=0, height=0):
         super().__init__(master, width=width, height=height)
         self.data = []
+        self.scatter_or_plot = None
         # self.mount()
 
     def mount(self):
@@ -18,7 +19,11 @@ class Graph3D(tk.Frame):
 
         fig = Figure(figsize=(5, 4), dpi=100)
         plot = fig.add_subplot(111, projection='3d')
-        plot.plot(x, y, z, label='Liniowy wykres 3D', linewidth=2)
+
+        if self.scatter_or_plot == 'punkty':
+            plot.scatter(x, y, z, label='Liniowy wykres 3D', linewidth=2, color='red')
+        else:
+            plot.plot(x, y, z, label='Liniowy wykres 3D', linewidth=2, color='red')
 
         plot.set_xlabel(self.data[0])
         plot.set_ylabel(self.data[1])
@@ -28,7 +33,8 @@ class Graph3D(tk.Frame):
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-    def set_data(self, x, y, z):
+    def set_data(self, x, y, z, scatter_or_plot):
+        self.scatter_or_plot = scatter_or_plot
         self.data = [x, y, z]
 
     @property
