@@ -24,7 +24,7 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.grid(row=0, column=4, sticky="ne")
 
         self.read_btn = tk.Button(self, text="Histogram")
-        self.read_btn.config(command=self.orignal_data)
+        self.read_btn.config(command=self.histogram)
         self.read_btn.grid(row=0, column=5, sticky="ne")
 
         self.read_btn = tk.Button(self, text="Normalizacja")
@@ -74,3 +74,6 @@ class HeaderFrame(HeaderAbstractFrame):
     def orignal_data(self):
         self.master.engine.df_to_original()
         self.master.footer.update_view()
+
+    def histogram(self):
+        self.master.center_panel.set_and_mount_histogram()

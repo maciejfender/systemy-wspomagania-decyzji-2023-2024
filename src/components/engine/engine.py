@@ -1,6 +1,7 @@
 import functools
 from components.graphs.graphDialog2d import GraphDialog2d
 from components.graphs.graphDialog3d import GraphDialog3d
+from components.graphs.histogramDialog import HistogramDialog
 from components.load_data.readData import ReadData
 from components.header_utils.discretizationDialog import DiscretizationDialog
 from components.header_utils.rangeDialog import RangeDialog
@@ -161,3 +162,6 @@ class Engine(Triggerable):
 
     def numeric_dialog(self):
         NumericDialog(self.main_window, self.dataset, self.numeric)
+
+    def histogram_dialog(self):
+        HistogramDialog(self.main_window, self.dataset, self.main_window.center_panel.temp.set_data)

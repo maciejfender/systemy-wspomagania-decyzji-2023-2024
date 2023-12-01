@@ -4,7 +4,7 @@ from components.abstract.abstractFrames import CustomAbstractFrame
 from components.graphs.graph2d import Graph2D
 from components.graphs.graph3d import Graph3D
 from components.graphs.graphSettings import GraphSettings
-
+from components.graphs.histogram import Histogram
 
 class CenterPanel(CustomAbstractFrame):
 
@@ -28,6 +28,10 @@ class CenterPanel(CustomAbstractFrame):
         self.temp = Graph3D(self.paned_window, height=200)
         self.main_window.engine.graph_3d_dialog()
 
+    def set_and_mount_histogram(self):
+        self.temp = Histogram(self.paned_window, height=300)
+        self.main_window.engine.histogram_dialog()
+
     def mount_graph_2d(self):
         self.center.destroy()
         self.center = self.temp
@@ -36,6 +40,13 @@ class CenterPanel(CustomAbstractFrame):
         self.paned_window.update()
 
     def mount_graph_3d(self):
+        self.center.destroy()
+        self.center = self.temp
+        self.center.mount()
+        self.paned_window.add(self.center)
+        self.paned_window.update()
+
+    def mount_histogram(self):
         self.center.destroy()
         self.center = self.temp
         self.center.mount()
