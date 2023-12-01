@@ -1,4 +1,5 @@
 import pandas as pd
+import tkinter as tk
 
 
 def deactivate(obj):
@@ -11,6 +12,35 @@ def activate(obj):
 
 def normal(obj):
     obj.configure(state="normal")
+
+
+def suggest_type(column, df) -> tuple:
+    column_data = df[column].head(10).values
+    # data_type = pd.api.types.infer_dtype(column_data, skipna=True)
+    data_type = 'string'
+    float_occured = False
+
+    for element in column_data:
+        is_f = is_float(element)
+        is_i = is_int(element)
+
+        if not is_f and not is_i:
+            data_type = 'string'
+            break
+
+        if is_i and ',' not in str(element) and '.' not in str(element) and not float_occured:
+            data_type = 'int'
+
+        if is_f and not is_i:
+            float_occured = True
+            data_type = 'float'
+
+    if data_type == 'int':
+        return 'int64', tk.IntVar()
+    elif data_type == 'float':
+        return 'float64', tk.DoubleVar()
+    else:
+        return 'string', tk.StringVar()
 
 
 def read_to_df(path: str, header_checked=False, separator_checked=False, separator=',') -> pd.DataFrame:
@@ -64,3 +94,19 @@ def read_txt(path: str, sep: str = ',', header: str = None):
         return pd.DataFrame(data, columns=header_columns)
 
     return pd.DataFrame(data)
+
+
+def is_int(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+
+
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False

@@ -11,19 +11,28 @@ class GraphDialog2d(tk.Toplevel):
         self.data_setter = data_setter
         self.checkboxes = []
         self.series_vars = {}
-        self.scale: tk.Checkbutton|None = None
+        self.scale: tk.Checkbutton | None = None
         self.scale_candidates_labels = []
         self.button = None
         self.type_var = None
+        self.scatter_or_plot = None
+        self.scatter_or_plot_var = None
 
         self.mount()
 
     def mount(self):
         columns = self.df.columns.tolist()
+
+        self.scatter_or_plot_var = tk.StringVar()
+        self.scatter_or_plot = ttk.Combobox(self, textvariable=self.scatter_or_plot_var,
+                                            values=['punkty', 'linia'])
+        self.scatter_or_plot.set('punkty')
+        self.scatter_or_plot.grid(row=0, column=0, sticky='nw')
+
         self.type_var = tk.StringVar()
         self.scale = ttk.Combobox(self, textvariable=self.type_var,
                                   values=columns)
-        self.scale.grid(row=0, column=0, sticky='nw')
+        self.scale.grid(row=1, column=0, sticky='nw')
         # self.scale.set(columns[0])
 
         numeric_columns = self.df.select_dtypes(include=['int64', 'float64'])
@@ -31,16 +40,16 @@ class GraphDialog2d(tk.Toplevel):
         for i, column in enumerate(numeric_columns):
             self.series_vars[column] = tk.BooleanVar()
             checkbox = tk.Checkbutton(self, text=column, variable=self.series_vars[column])
-            checkbox.grid(row=i + 1, column=0, sticky='nw')
+            checkbox.grid(row=i + 2, column=0, sticky='nw')
             self.checkboxes.append(checkbox)
 
         self.button = tk.Button(self, text="Dalej")
         self.button.config(command=self.get_graph_params_and_destroy)
-        self.button.grid(row=len(numeric_columns) + 1, column=0, sticky="ne")
+        self.button.grid(row=len(numeric_columns) + 2, column=0, sticky="ne")
 
     def get_graph_params_and_destroy(self):
         selected_series = self.get_selected_series()
-        self.data_setter((self.type_var.get(), selected_series))
+        self.data_setter((self.type_var.get(), selected_series), self.scatter_or_plot_var.get())
         self.master.center_panel.mount_graph_2d()
         self.destroy()
         self.update()

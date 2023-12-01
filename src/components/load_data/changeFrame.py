@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
+import pandas as pd
+from src.components.engine.engineUtils import suggest_type
 
 
 class ChangeFrame(tk.Frame):
@@ -52,10 +54,12 @@ class ChangeFrame(tk.Frame):
             entry.insert(0, column)
             self.columns_entries.append(entry)
 
-            self.types_var[column] = tk.StringVar()
+            # self.types_var[column] = tk.StringVar()
+            suggested_type = suggest_type(column, self.df)
+            self.types_var[column] = suggested_type[1]
             column_type = ttk.Combobox(self.frame_for_content, textvariable=self.types_var[column],
                                        values=["int64", "float64", "object", "string"])
-            column_type.set("string")
+            column_type.set(suggested_type[0])
             self.columns_types.append(column_type)
 
         for i, entry in enumerate(self.columns_entries):

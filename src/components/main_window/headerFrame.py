@@ -31,13 +31,17 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.config(command=self.normalization)
         self.read_btn.grid(row=0, column=6, sticky="ne")
 
-        self.read_btn = tk.Button(self, text="Zmień rozkład danych")
+        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości")
         self.read_btn.config(command=self.min_max)
         self.read_btn.grid(row=0, column=7, sticky="ne")
 
+        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres procentowy")
+        self.read_btn.config(command=self.min_max_percentage)
+        self.read_btn.grid(row=0, column=8, sticky="ne")
+
         self.read_btn = tk.Button(self, text="Przywróć dane")
         self.read_btn.config(command=self.orignal_data)
-        self.read_btn.grid(row=0, column=8, sticky="ne")
+        self.read_btn.grid(row=0, column=9, sticky="ne")
 
     def load_data(self):
         self.master.footer.load_data()
@@ -56,6 +60,9 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def min_max(self):
         self.master.engine.min_max_dialog()
+
+    def min_max_percentage(self):
+        self.master.engine.min_max_percentage_dialog()
 
     def orignal_data(self):
         self.master.engine.df_to_original()

@@ -8,6 +8,7 @@ class Graph2D(tk.Frame):
     def __init__(self, master, width=0, height=0):
         super().__init__(master, width=width, height=height)
         self.data = None
+        self.scatter_or_plot = None
         # self.mount()
 
     def mount(self):
@@ -25,7 +26,10 @@ class Graph2D(tk.Frame):
 
         for column in self.data[1]:
             y = df[column].values
-            ax.plot(x, y)
+            if self.scatter_or_plot == 'punkty':
+                ax.scatter(x, y)
+            else:
+                ax.plot(x, y)
             ax.set_xlabel(self.data[0])
             ax.set_ylabel('Series')
 
@@ -35,7 +39,8 @@ class Graph2D(tk.Frame):
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-    def set_data(self, data):
+    def set_data(self, data, scatter_or_plot):
+        self.scatter_or_plot = scatter_or_plot
         self.data = data
 
     @property
