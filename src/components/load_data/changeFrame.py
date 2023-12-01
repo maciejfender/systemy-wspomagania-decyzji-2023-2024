@@ -23,7 +23,6 @@ class ChangeFrame(tk.Frame):
     def on_configure(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox('all'))
 
-
     def mount(self):
 
         self.canvas = tk.Canvas(self)
