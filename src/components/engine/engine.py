@@ -5,6 +5,8 @@ from components.load_data.readData import ReadData
 from components.header_utils.discretizationDialog import DiscretizationDialog
 from components.header_utils.rangeDialog import RangeDialog
 from components.header_utils.normalizationDialog import NormalizationDialog
+from components.header_utils.rangePercentageDialog import RangePercentageDialog
+from components.header_utils.numericDialog import NumericDialog
 import pandas as pd
 
 
@@ -111,6 +113,26 @@ class Engine(Triggerable):
     def min_max_dialog(self):
         RangeDialog(self.main_window, self.dataset, self.min_max)
 
+    def min_max_percentage(self, column: str, lower_bound_percentage: str, upper_bound_percentage: str):
+        lower_bound = None
+        upper_bound = None
+
+        if lower_bound_percentage != '':
+            lower_bound = self.dataset[column].quantile(int(lower_bound_percentage) / 100)
+
+        if upper_bound_percentage != '':
+            upper_bound = self.dataset[column].quantile(int(upper_bound_percentage) / 100)
+
+        if lower_bound_percentage != '' and upper_bound_percentage != '':
+            self.dataset = self.dataset[(self.dataset[column] <= lower_bound) & (self.dataset[column] >= upper_bound)]
+        elif lower_bound_percentage != '':
+            self.dataset = self.dataset[(self.dataset[column] <= lower_bound)]
+        elif upper_bound_percentage != '':
+            self.dataset = self.dataset[(self.dataset[column] >= upper_bound)]
+
+    def min_max_percentage_dialog(self):
+        RangePercentageDialog(self.main_window, self.dataset, self.min_max_percentage)
+
     def normalization(self, column):
         df = self.dataset
         df[column + ' - Norm'] = (df[column] - df[column].mean()) / df[column].std()
@@ -119,3 +141,23 @@ class Engine(Triggerable):
 
     def normalization_dialog(self):
         NormalizationDialog(self.main_window, self.dataset, self.normalization)
+
+    def numeric(self, column):
+        data = self.dataset[column]
+        data = set(data)
+        data = sorted(list(data))
+
+        dictionary = {}
+
+        for idx, item in enumerate(data):
+            dictionary[item] = idx + 1
+
+        new_column = []
+
+        for item in self.dataset[column]:
+            new_column.append(dictionary[item])
+
+        self.dataset[column + ' - Num'] = new_column
+
+    def numeric_dialog(self):
+        NumericDialog(self.main_window, self.dataset, self.numeric)

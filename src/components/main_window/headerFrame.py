@@ -39,9 +39,13 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn.config(command=self.min_max_percentage)
         self.read_btn.grid(row=0, column=8, sticky="ne")
 
+        self.read_btn = tk.Button(self, text="Zmień dane na numeryczne")
+        self.read_btn.config(command=self.numeric)
+        self.read_btn.grid(row=0, column=9, sticky="ne")
+
         self.read_btn = tk.Button(self, text="Przywróć dane")
         self.read_btn.config(command=self.orignal_data)
-        self.read_btn.grid(row=0, column=9, sticky="ne")
+        self.read_btn.grid(row=0, column=10, sticky="ne")
 
     def load_data(self):
         self.master.footer.load_data()
@@ -63,6 +67,9 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def min_max_percentage(self):
         self.master.engine.min_max_percentage_dialog()
+
+    def numeric(self):
+        self.master.engine.numeric_dialog()
 
     def orignal_data(self):
         self.master.engine.df_to_original()
