@@ -53,7 +53,10 @@ class DistanceStrategy(abc.ABC):
         :param columns: List containing names that can be only in dict
         :return: New dict with constrained keys
         """
-        return {key: d[key] for key in d.keys() if key in columns}
+        # return {key: d[key] for key in d.keys() if key in columns}
+        #FIXME
+        return d
+
 
     @staticmethod
     def _filter_df_with_col_names(df, columns):

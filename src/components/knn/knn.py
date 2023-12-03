@@ -3,7 +3,8 @@ from tkinter import ttk
 
 import pandas as pd
 
-from components.knn.knn_test_one import KnnOneClassifierTopLevel
+from components.knn.knn_experiment_gui import KnnExperimentStartTopLevel
+from components.knn.knn_test_one_gui import KnnOneClassifierTopLevel
 
 
 class KnnLabelFrame(ttk.LabelFrame):
@@ -26,8 +27,11 @@ class KnnExperimentFrame(KnnLabelFrame):
 
     def __init__(self, master) -> None:
         super().__init__(master, text="Eksperyment i obliczenie statystyk")
-        l = tk.Label(self, text="213")
-        l.pack()
+        self.launch = tk.Button(self, text ="pokaż", command=self.experiment_start)
+        self.launch.pack()
+
+    def experiment_start(self):
+        KnnExperimentStartTopLevel(self)
 
 
 class KnnTestOneFrame(KnnLabelFrame):

@@ -29,9 +29,9 @@ class KnnOneToEveryDecisionStrategy:
         :return:
         """
         scored = self._score_every_row(other)
-        print(f"{scored=}")
-        print(f"{sorted(scored, key=lambda x:x[0])=}")
-        print(f"{sorted(scored, key=lambda x:x[1])=}")
+        # print(f"{scored=}")
+        # print(f"{sorted(scored, key=lambda x:x[0])=}")
+        # print(f"{sorted(scored, key=lambda x:x[1])=}")
         counted = {}
         for _, c in sorted(scored, key=lambda x: x[0])[:k]:
             if c not in counted.keys():
@@ -40,7 +40,8 @@ class KnnOneToEveryDecisionStrategy:
 
         max_occurred = max(counted.values())
 
-        print(f"{max_occurred=}")
+        # print(f"{max_occurred=}")
         selected = list({k: v for k, v in counted.items() if v == max_occurred}.keys())
-        print(f"{selected=}\n\n")
+        # print(f"{selected=}\n\n")
         return sorted(selected)[0]
+
