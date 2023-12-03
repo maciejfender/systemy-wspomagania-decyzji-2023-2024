@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import filedialog
+
 from src.components.engine.engineUtils import normal, deactivate, activate
+
+SEPARATORS = [',', ';', '\t']
 
 DEFAULT_SEPARATOR = ','
 
@@ -67,6 +70,11 @@ class ReadFrame(tk.Frame):
         self.show_message_loaded_data()
         activate(self.master.button_next)
 
+        separator = self.detect_separator()
+        if separator is not None:
+            self.separator_entry.delete(0, 'end')
+            self.separator_entry.insert(0, separator.encode())
+
     def get_path(self):
         return self.path
 
@@ -86,6 +94,44 @@ class ReadFrame(tk.Frame):
             self.activate_separator_entry()
 
     def activate_separator_entry(self):
+
         normal(self.separator_entry)
         if not self.separator_entry.get():
             self.separator_entry.insert(0, DEFAULT_SEPARATOR)
+
+    def detect_separator(self):
+        try:
+            with open(self.path, "r") as file:
+                content = file.read()
+
+            content = content.split('\n')
+
+            def lambda_filter(s):
+                row = s.strip()
+
+                if len(row) == 0:
+                    return False
+
+                if row[0] == '#':
+                    return False
+                return True
+
+            content = list(filter(lambda_filter, content))
+
+            for sep in SEPARATORS:
+                all_rows = 0
+                correctly_split = 0
+                expected_split = None
+                for row in content:
+
+                    all_rows += 1
+                    count = row.count(sep)
+
+                    if count > 0:
+                        if expected_split is None:
+                            expected_split = count
+                        correctly_split += 1
+                if all_rows == correctly_split:
+                    return sep
+        except Exception as e:
+            raise e

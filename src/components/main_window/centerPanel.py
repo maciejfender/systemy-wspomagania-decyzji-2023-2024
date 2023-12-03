@@ -6,6 +6,7 @@ from components.graphs.graph3d import Graph3D
 from components.graphs.graphSettings import GraphSettings
 from components.graphs.histogram import Histogram
 
+
 class CenterPanel(CustomAbstractFrame):
 
     def __init__(self, master) -> None:

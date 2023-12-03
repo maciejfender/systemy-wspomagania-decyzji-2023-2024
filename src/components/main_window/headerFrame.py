@@ -7,45 +7,45 @@ class HeaderFrame(HeaderAbstractFrame):
     def __init__(self, master: "MainWindow"):
         super().__init__(master)
 
-        self.read_btn = tk.Button(self, text="Wczytaj dataset")
-        self.read_btn.config(command=self.load_data)
-        self.read_btn.grid(row=0, column=1, sticky="ne")
+        self._mount_elements()
 
-        self.read_btn = tk.Button(self, text="Wykres 2D")
-        self.read_btn.config(command=self.graph_2d)
-        self.read_btn.grid(row=0, column=2, sticky="ne")
+    def _mount_elements(self):
+        self.read_btn = tk.Button(self, text="Wczytaj dataset", command=self.load_data)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Wykres 3D")
-        self.read_btn.config(command=self.graph_3d)
-        self.read_btn.grid(row=0, column=3, sticky="ne")
+        self.read_btn = tk.Button(self, text="Wykres 2D", command=self.graph_2d)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Dyskryminacja zmiennej")
-        self.read_btn.config(command=self.discretization)
-        self.read_btn.grid(row=0, column=4, sticky="ne")
+        self.read_btn = tk.Button(self, text="Wykres 3D", command=self.graph_3d)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Histogram")
-        self.read_btn.config(command=self.histogram)
-        self.read_btn.grid(row=0, column=5, sticky="ne")
+        self.read_btn = tk.Button(self, text="Dyskryminacja zmiennej", command=self.discretization)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Normalizacja")
-        self.read_btn.config(command=self.normalization)
-        self.read_btn.grid(row=0, column=6, sticky="ne")
+        self.read_btn = tk.Button(self, text="Histogram", command=self.histogram)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości")
-        self.read_btn.config(command=self.min_max)
-        self.read_btn.grid(row=0, column=7, sticky="ne")
+        self._reset_col()
 
-        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres procentowy")
-        self.read_btn.config(command=self.min_max_percentage)
-        self.read_btn.grid(row=0, column=8, sticky="ne")
+        self.read_btn = tk.Button(self, text="Normalizacja", command=self.normalization)
+        self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Zmień dane na numeryczne")
-        self.read_btn.config(command=self.numeric)
-        self.read_btn.grid(row=0, column=9, sticky="ne")
+        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości", command=self.min_max)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Przywróć dane")
-        self.read_btn.config(command=self.orignal_data)
-        self.read_btn.grid(row=0, column=10, sticky="ne")
+        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres procentowy",command=self.min_max_percentage)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
+        self.read_btn = tk.Button(self, text="Zmień dane na numeryczne", command=self.numeric)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
+        self.read_btn = tk.Button(self, text="knn", command=self.knn)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
+        self._reset_col()
+
+        self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
+        self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
 
     def load_data(self):
         self.master.footer.load_data()
@@ -71,9 +71,12 @@ class HeaderFrame(HeaderAbstractFrame):
     def numeric(self):
         self.master.engine.numeric_dialog()
 
-    def orignal_data(self):
+    def original_data(self):
         self.master.engine.df_to_original()
         self.master.footer.update_view()
 
     def histogram(self):
         self.master.center_panel.set_and_mount_histogram()
+
+    def knn(self):
+        self.master.engine.open_knn_module()
