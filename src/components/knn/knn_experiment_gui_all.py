@@ -2,7 +2,7 @@ import json
 import random
 import time
 import tkinter as tk
-from concurrent.futures import ProcessPoolExecutor, as_completed  # Import ProcessPoolExecutor and as_completed
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from tkinter import ttk
 
 from components.ScrollableCustomFrame import ScrollableCustomFrame
@@ -149,8 +149,7 @@ class KnnBetterExperiment:
                                                                       self.columns
                                                                       )
 
-
-    def do(self, k ):
+    def do(self, k):
         self.k = k
         results = []
         start = time.time()
@@ -175,7 +174,6 @@ class KnnBetterExperiment:
         result_expected_class = result == expected_class
         return result_expected_class
 
-
     def do_parallel(self):
         results = []
         start = time.time()
@@ -186,7 +184,7 @@ class KnnBetterExperiment:
         # for r in self.records_ids:
         #     result_expected_class = self.process_one_case(r)
 
-            # results.append(result_expected_class)
+        # results.append(result_expected_class)
         end = time.time()
         print(end - start)
         res = results.count(True)

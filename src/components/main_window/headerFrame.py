@@ -46,7 +46,7 @@ class HeaderFrame(HeaderAbstractFrame):
         self._reset_col()
 
         self.read_btn = tk.Button(self, text="Usuń kolumny z jedną wartością", command=self.delete_columns_with_one_value)
-        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+        self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
 
         self.btn_knn_one = tk.Button(self, text="knn One", command=self.knn_one)
         self.btn_knn_one.grid(row=self._row(), column=self._new_col(), sticky="nsew")
@@ -56,8 +56,6 @@ class HeaderFrame(HeaderAbstractFrame):
 
         self.btn_knn_exp_all = tk.Button(self, text="knn Experiment ALL", command=self.knn_experiment_all)
         self.btn_knn_exp_all.grid(row=self._row(), column=self._new_col(), sticky="nsew")
-        self._reset_col()
-
         self._reset_col()
 
         self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
