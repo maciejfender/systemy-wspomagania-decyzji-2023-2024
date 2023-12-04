@@ -8,6 +8,8 @@ from components.knn.KnnOneToEveryDecisionStrategy import KnnOneToEveryDecisionSt
 from components.knn.KnnOneToEveryDecisionStrategyWithOptimization import KnnOneToEveryDecisionStrategyWithOptimization
 from components.knn.distance_strategies.distances import *
 
+RESULT_CONST = "Wynik:"
+
 MAHALANOBIS_STRATEGY = "Mahalanobisa"
 MANHATTAN_STRATEGY = "Manhattan"
 CZEBYSZEW_STRATEGY = "Czebyszewa"
@@ -37,10 +39,11 @@ class KnnExperimentVariableEntry(tk.Frame):
         return self.var_enabled.get()
 
 
-class KnnExperimentStartTopLevel(tk.Toplevel):
+class KnnExperimentOneStartTopLevel(tk.Toplevel):
+
     @property
     def dataset(self):
-        return self.master.dataset
+        return self.master.engine.dataset
 
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -76,6 +79,10 @@ class KnnExperimentStartTopLevel(tk.Toplevel):
         self.btn_submit = tk.Button(self, text="Start", command=self.start)
         self.btn_submit.pack()
 
+        self.var_result = tk.StringVar(self, value=RESULT_CONST)
+        self.label_result = tk.Label(self, textvariable=self.var_result)
+        self.label_result.pack()
+
     def start(self):
         strategy = STRATEGY_MAPPING[self.var_strategy.get()]
         dataset = self.dataset
@@ -84,7 +91,9 @@ class KnnExperimentStartTopLevel(tk.Toplevel):
         assert 1 <= k <= len(dataset.index) - 1
         columns = self.get_variables_list()
         records_to_LOO = list(dataset.index)
-        print(KnnBetterExperiment(k, column, records_to_LOO, dataset, strategy, columns, ).do())
+        result = (KnnBetterExperiment(k, column, records_to_LOO, dataset, strategy, columns, ).do())
+        self.var_result.set(RESULT_CONST+str(result)+" Na "+str(len(dataset.index) - 1))
+
 
     def get_k(self):
         return int(self.var_k.get())
