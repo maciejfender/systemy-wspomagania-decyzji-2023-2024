@@ -169,3 +169,19 @@ class Engine(Triggerable):
 
     def open_knn_module(self):
         KnnModuleTopLevel(self.main_window, self.dataset)
+
+    def normalize_whole_dataset(self):
+        base_for_new_df = {}
+        numeric_columns = self.dataset.select_dtypes(include=['int64', 'float64']).columns.tolist()
+        for column in numeric_columns:
+            new_data = (self.dataset[column] - self.dataset[column].mean()) / self.dataset[column].std()
+            base_for_new_df[column] = new_data
+
+        string_columns = self.dataset.select_dtypes(include=["object", "string"]).columns.tolist()
+
+        new_df = pd.DataFrame(base_for_new_df)
+
+        for column in string_columns:
+            new_df[column] = self.dataset[column].copy()
+
+        self.dataset = new_df

@@ -30,6 +30,9 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn = tk.Button(self, text="Normalizacja", command=self.normalization)
         self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
 
+        self.read_btn = tk.Button(self, text="Normalizacja całego zbioru", command=self.normalization_whole)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
         self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości", command=self.min_max)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
@@ -39,13 +42,13 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn = tk.Button(self, text="Zmień dane na numeryczne", command=self.numeric)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="knn", command=self.knn)
-        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
-
         self._reset_col()
 
-        self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
+        self.read_btn = tk.Button(self, text="knn", command=self.knn)
         self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
+
+        self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
     def load_data(self):
         self.master.footer.load_data()
@@ -61,6 +64,10 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def normalization(self):
         self.master.engine.normalization_dialog()
+
+    def normalization_whole(self):
+        self.master.engine.normalize_whole_dataset()
+        self.master.footer.update_view()
 
     def min_max(self):
         self.master.engine.min_max_dialog()
