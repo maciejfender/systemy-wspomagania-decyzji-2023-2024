@@ -33,14 +33,20 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości", command=self.min_max)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres procentowy",command=self.min_max_percentage)
+        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres procentowy",
+                                  command=self.min_max_percentage)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
         self.read_btn = tk.Button(self, text="Zmień dane na numeryczne", command=self.numeric)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="knn", command=self.knn)
-        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+        self._reset_col()
+
+        self.btn_knn_one = tk.Button(self, text="knn One", command=self.knn_one)
+        self.btn_knn_one.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
+
+        self.btn_knn_exp = tk.Button(self, text="knn Experiment", command=self.knn_experiment)
+        self.btn_knn_exp.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
         self._reset_col()
 
@@ -78,5 +84,8 @@ class HeaderFrame(HeaderAbstractFrame):
     def histogram(self):
         self.master.center_panel.set_and_mount_histogram()
 
-    def knn(self):
-        self.master.engine.open_knn_module()
+    def knn_one(self):
+        self.master.engine.open_knn_one_module()
+
+    def knn_experiment(self):
+        self.master.engine.open_knn_experiment_module()

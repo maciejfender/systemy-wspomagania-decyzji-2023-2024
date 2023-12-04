@@ -3,7 +3,7 @@ from tkinter import ttk
 
 import pandas as pd
 
-from components.knn.knn_experiment_gui import KnnExperimentStartTopLevel
+from components.knn.knn_experiment_gui_one import KnnExperimentOneStartTopLevel
 from components.knn.knn_test_one_gui import KnnOneClassifierTopLevel
 
 
@@ -31,7 +31,7 @@ class KnnExperimentFrame(KnnLabelFrame):
         self.launch.pack()
 
     def experiment_start(self):
-        KnnExperimentStartTopLevel(self)
+        KnnExperimentOneStartTopLevel(self)
 
 
 class KnnTestOneFrame(KnnLabelFrame):

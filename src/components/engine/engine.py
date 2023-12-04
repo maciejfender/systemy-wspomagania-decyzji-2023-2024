@@ -3,6 +3,8 @@ from components.graphs.graphDialog2d import GraphDialog2d
 from components.graphs.graphDialog3d import GraphDialog3d
 from components.graphs.histogramDialog import HistogramDialog
 from components.knn.knn import KnnModuleTopLevel
+from components.knn.knn_experiment_gui_one import KnnExperimentOneStartTopLevel
+from components.knn.knn_test_one_gui import KnnOneClassifierTopLevel
 from components.load_data.readData import ReadData
 from components.header_utils.discretizationDialog import DiscretizationDialog
 from components.header_utils.rangeDialog import RangeDialog
@@ -167,5 +169,8 @@ class Engine(Triggerable):
     def histogram_dialog(self):
         HistogramDialog(self.main_window, self.dataset, self.main_window.center_panel.temp.set_data)
 
-    def open_knn_module(self):
-        KnnModuleTopLevel(self.main_window, self.dataset)
+    def open_knn_one_module(self):
+        KnnOneClassifierTopLevel(self.main_window, 1)
+
+    def open_knn_experiment_module(self):
+        KnnExperimentOneStartTopLevel(self.main_window)
