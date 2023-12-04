@@ -1,18 +1,19 @@
 import functools
+
+import pandas as pd
+
 from components.graphs.graphDialog2d import GraphDialog2d
 from components.graphs.graphDialog3d import GraphDialog3d
 from components.graphs.histogramDialog import HistogramDialog
-from components.knn.knn import KnnModuleTopLevel
+from components.header_utils.discretizationDialog import DiscretizationDialog
+from components.header_utils.normalizationDialog import NormalizationDialog
+from components.header_utils.numericDialog import NumericDialog
+from components.header_utils.rangeDialog import RangeDialog
+from components.header_utils.rangePercentageDialog import RangePercentageDialog
 from components.knn.knn_experiment_gui_all import KnnExperimentAllStartTopLevel
 from components.knn.knn_experiment_gui_one import KnnExperimentOneStartTopLevel
 from components.knn.knn_test_one_gui import KnnOneClassifierTopLevel
 from components.load_data.readData import ReadData
-from components.header_utils.discretizationDialog import DiscretizationDialog
-from components.header_utils.rangeDialog import RangeDialog
-from components.header_utils.normalizationDialog import NormalizationDialog
-from components.header_utils.rangePercentageDialog import RangePercentageDialog
-from components.header_utils.numericDialog import NumericDialog
-import pandas as pd
 
 
 class PrintDecoratorMeta(type):
@@ -178,3 +179,14 @@ class Engine(Triggerable):
 
     def open_knn_experiment_all_module(self):
         KnnExperimentAllStartTopLevel(self.main_window)
+
+    def remove_empty_cols(self):
+        # Count unique values in each column
+        unique_counts = self.dataset.nunique()
+
+        # Get columns with only one unique value
+        single_value_cols = unique_counts[unique_counts == 1].index
+
+        # Drop columns with only one unique value
+        self.dataset = self.dataset.drop(single_value_cols, axis=1)
+
