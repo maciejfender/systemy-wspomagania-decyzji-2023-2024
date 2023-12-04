@@ -3,6 +3,7 @@ from components.graphs.graphDialog2d import GraphDialog2d
 from components.graphs.graphDialog3d import GraphDialog3d
 from components.graphs.histogramDialog import HistogramDialog
 from components.knn.knn import KnnModuleTopLevel
+from components.knn.knn_experiment_gui_all import KnnExperimentAllStartTopLevel
 from components.knn.knn_experiment_gui_one import KnnExperimentOneStartTopLevel
 from components.knn.knn_test_one_gui import KnnOneClassifierTopLevel
 from components.load_data.readData import ReadData
@@ -174,3 +175,6 @@ class Engine(Triggerable):
 
     def open_knn_experiment_module(self):
         KnnExperimentOneStartTopLevel(self.main_window)
+
+    def open_knn_experiment_all_module(self):
+        KnnExperimentAllStartTopLevel(self.main_window)

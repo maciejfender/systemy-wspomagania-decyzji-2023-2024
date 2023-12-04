@@ -48,6 +48,9 @@ class HeaderFrame(HeaderAbstractFrame):
         self.btn_knn_exp = tk.Button(self, text="knn Experiment", command=self.knn_experiment)
         self.btn_knn_exp.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
+        self.btn_knn_exp_all = tk.Button(self, text="knn Experiment ALL", command=self.knn_experiment_all)
+        self.btn_knn_exp_all.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
         self._reset_col()
 
         self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
@@ -89,3 +92,6 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def knn_experiment(self):
         self.master.engine.open_knn_experiment_module()
+
+    def knn_experiment_all(self):
+        self.master.engine.open_knn_experiment_all_module()
