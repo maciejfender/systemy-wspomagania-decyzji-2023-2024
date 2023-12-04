@@ -1,20 +1,21 @@
+import json
+import random
 import time
 import tkinter as tk
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed  # Import ProcessPoolExecutor and as_completed
 from tkinter import ttk
 
 from components.ScrollableCustomFrame import ScrollableCustomFrame
-from components.knn.KnnOneToEveryDecisionStrategy import KnnOneToEveryDecisionStrategy
 from components.knn.KnnOneToEveryDecisionStrategyWithOptimization import KnnOneToEveryDecisionStrategyWithOptimization
 from components.knn.distance_strategies.distances import *
 
-MAHALANOBIS_STRATEGY = "Mahalanobisa"
+MAHALANOBIS_STRATEGY = "Mahalanobis"
 MANHATTAN_STRATEGY = "Manhattan"
-CZEBYSZEW_STRATEGY = "Czebyszewa"
-NORMAL_STRATEGY = 'Normalna'
+CZEBYSZEW_STRATEGY = "Czebyszew"
+NORMAL_STRATEGY = 'Cartesian'
 
 STRATEGY_MAPPING = {
-    MANHATTAN_STRATEGY: MahalanobisDistanceStrategy,
+    MANHATTAN_STRATEGY: ManhattanDistanceStrategy,
     CZEBYSZEW_STRATEGY: CzebyszewDistanceStrategy,
     MAHALANOBIS_STRATEGY: MahalanobisDistanceStrategy,
     NORMAL_STRATEGY: CartesianDistanceStrategy,
@@ -47,19 +48,19 @@ class KnnExperimentAllStartTopLevel(tk.Toplevel):
         super().__init__(master)
 
         STRATEGIES_KEY_LIST = list(STRATEGY_MAPPING.keys())
+
+        tk.Label(self, text="Wybór metryki odległości:").pack()
         self.var_strategy = tk.StringVar(self, value=NORMAL_STRATEGY)
         self.combobox_strategy = ttk.Combobox(self, values=STRATEGIES_KEY_LIST, textvariable=self.var_strategy)
         self.combobox_strategy.pack()
 
+        tk.Label(self, text="Wybór klasy:").pack()
         last_col = self.dataset.columns[-1]
         self.var_column = tk.StringVar(self, value=last_col)
         self.combobox_class_column = ttk.Combobox(self, values=list(self.dataset.columns), textvariable=self.var_column)
         self.combobox_class_column.pack()
 
-        self.var_k = tk.StringVar(self, value=str(1))
-        self.entry_k = tk.Entry(self, textvariable=self.var_k)
-        self.entry_k.pack()
-
+        tk.Label(self, text="Wybór kolumn działających jako wejścia:").pack()
         self.frame_entries = tk.Frame(self)
         self.frame_entries.pack()
         self.entries = {}
@@ -78,12 +79,17 @@ class KnnExperimentAllStartTopLevel(tk.Toplevel):
         self.btn_submit.pack()
 
     def start(self):
-        strategy = STRATEGY_MAPPING[self.var_strategy.get()]
+        strategy_name = self.var_strategy.get()
+        strategy = STRATEGY_MAPPING[strategy_name]
         dataset = self.dataset
         column = self.var_column.get()
         results = {}
         max_k = len(self.dataset.index) - 1
         start = time.time()
+
+        columns = self.get_variables_list()
+        records_to_LOO = list(dataset.index)
+        experiment = KnnBetterExperiment(column, records_to_LOO, dataset, strategy, columns, )
         for k in range(1, max_k + 1):
             self.k = k
             elapsed = time.time() - start
@@ -91,14 +97,20 @@ class KnnExperimentAllStartTopLevel(tk.Toplevel):
 
             print(f"K: {k} / {max_k}\tO: {time_for_one:.4}\tT: {elapsed:.4}\tRemaining: {(max_k - k) * time_for_one}")
 
-            columns = self.get_variables_list()
-            records_to_LOO = list(dataset.index)
-            result = KnnBetterExperiment(k, column, records_to_LOO, dataset, strategy, columns, ).do()
+            result = experiment.do(k)
             results[k] = result
-        # todo zapis do pliku
-        # todo plot
-        print(time.time()-start)
+
+        self.dump_results_to_file(results, strategy_name)
+
+        print(time.time() - start)
         print(results)
+
+        self.plot_results(results, strategy_name)
+
+    def dump_results_to_file(self, results, strategy_name):
+        filename = self.get_file_name(strategy_name)
+        with open(filename, 'w+') as file:
+            json.dump(results, file)
 
     def get_k(self):
         return int(self.var_k.get())
@@ -106,70 +118,21 @@ class KnnExperimentAllStartTopLevel(tk.Toplevel):
     def get_variables_list(self):
         return [k for k, v in self.entries.items() if v]
 
+    def get_file_name(self, strategy):
+        from datetime import datetime
+        now = datetime.now().strftime("%m %d %Y %H %M %S")
+        return now + " " + strategy + str(random.randint(100000, 900000)) + " .json"
 
-class KnnExperiment:
-    def __init__(self, k, column, records_to_LOO, dataset, strategy, columns):
-        self.k = k
-        self.class_column = column
-        self.records_ids = records_to_LOO
-        self.dataset = dataset
-        self.strategy = strategy(dataset, columns)
-
-    def do(self):
-        results = []
-        start = time.time()
-
-        for r in self.records_ids:
-            result_expected_class = self.process_one_case(r)
-
-            results.append(result_expected_class)
-        end = time.time()
-        print(end - start)
-        res = results.count(True)
-        print(res)
-
-        return res
-
-    def process_one_case(self, r):
-        df = self.dataset.copy()
-        row = df.loc[r].to_dict()
-        df = df.drop(r)
-        expected_class = row.pop(self.class_column)
-        result = KnnOneToEveryDecisionStrategy(self.strategy,
-                                               df,
-                                               self.class_column) \
-            .make_decision(row, self.k)
-        result_expected_class = result == expected_class
-        return result_expected_class
-
-    def do_parallel(self):
-
-        results = []
-        start = time.time()
-
-        # Użycie ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=3) as executor:
-            # Pusta lista do przechowywania wyników
-            # Uruchamianie zadań i zbieranie wyników
-            futures = [executor.submit(self.process_one_case, r) for r in self.records_ids]
-
-            for future in futures:
-                result = future.result()  # Oczekiwanie na wynik
-                results.append(result)
-
-        # for r in self.records_ids:
-        #     result_expected_class = self.process_one_case(class_column, dataset, k, r, strategy)
-        #
-        #     results.append(result_expected_class)
-        end = time.time()
-        print(end - start)
-        res = results.count(True)
-        print(res)
+    def plot_results(self, results, strategy_name):
+        import matplotlib.pyplot as plt
+        dataset = list(zip(*[(k, v) for k, v in results.items()]))
+        plt.plot(*dataset)
+        plt.title(strategy_name)
+        plt.show()
 
 
 class KnnBetterExperiment:
-    def __init__(self, k, column, records_to_LOO, dataset, strategy, columns):
-        self.k = k
+    def __init__(self, column, records_to_LOO, dataset, strategy, columns):
         self.class_column = column
         self.records_ids = records_to_LOO
 
@@ -186,13 +149,15 @@ class KnnBetterExperiment:
                                                                       self.columns
                                                                       )
 
-    def do(self):
+
+    def do(self, k ):
+        self.k = k
         results = []
         start = time.time()
         no_of_all = len(self.records_ids)
         for i, r in enumerate(self.records_ids):
             result_expected_class = self.process_one_case(r)
-            print(f"{i:4}/{no_of_all:4}, {i / no_of_all * 100:.5}")
+            # print(f"{i:4}/{no_of_all:4}, {i / no_of_all * 100:.5}")
 
             results.append(result_expected_class)
         end = time.time()
@@ -209,3 +174,22 @@ class KnnBetterExperiment:
         expected_class = row[self.class_column]
         result_expected_class = result == expected_class
         return result_expected_class
+
+
+    def do_parallel(self):
+        results = []
+        start = time.time()
+        with ProcessPoolExecutor(max_workers=10) as executor:
+            futures = [executor.submit(self.process_one_case, r) for r in self.records_ids]
+            for future in as_completed(futures):
+                results.append(future.result())
+        # for r in self.records_ids:
+        #     result_expected_class = self.process_one_case(r)
+
+            # results.append(result_expected_class)
+        end = time.time()
+        print(end - start)
+        res = results.count(True)
+        print(res)
+
+        return res

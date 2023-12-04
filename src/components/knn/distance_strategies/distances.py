@@ -72,7 +72,8 @@ class DistanceStrategy(abc.ABC):
             except ValueError:
                 assert False, f"Column '{col}' contains non-numeric data."
 
-        return np.cov(filtered.values,rowvar=False)
+        # return np.cov(filtered.values,rowvar=False)
+        return filtered.cov()
 
 
 class CartesianDistanceStrategy(DistanceStrategy):
@@ -107,7 +108,13 @@ class MahalanobisDistanceStrategy(DistanceStrategy):
     def distance(self, a, b) -> float:
         filtered_and_zipped = self._filter_and_join_data(a, b, self.columns)
         diff_vector = np.array(list(map(lambda v: abs(v[0] - v[1]), filtered_and_zipped)))
-        return math.sqrt(np.dot(np.dot(diff_vector, self.inv_covariance_matrix), diff_vector).item())
+        calc_dot_prod = np.dot(np.dot(diff_vector.T, self.inv_covariance_matrix), diff_vector).item()
+        try:
+            e= np.sqrt(calc_dot_prod)
+        except Exception:
+            print(calc_dot_prod)
+            e= np.sqrt(max(0, calc_dot_prod))
+        return e
 
 
 class CzebyszewDistanceStrategy(DistanceStrategy):

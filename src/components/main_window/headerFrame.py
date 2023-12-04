@@ -42,8 +42,11 @@ class HeaderFrame(HeaderAbstractFrame):
 
         self._reset_col()
 
+        self.btn_remove_empty = tk.Button(self, text="Remove empty", command=self.remove_empty_cols)
+        self.btn_remove_empty.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
+
         self.btn_knn_one = tk.Button(self, text="knn One", command=self.knn_one)
-        self.btn_knn_one.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
+        self.btn_knn_one.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
         self.btn_knn_exp = tk.Button(self, text="knn Experiment", command=self.knn_experiment)
         self.btn_knn_exp.grid(row=self._row(), column=self._new_col(), sticky="nsew")
@@ -95,3 +98,7 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def knn_experiment_all(self):
         self.master.engine.open_knn_experiment_all_module()
+
+    def remove_empty_cols(self):
+        self.master.engine.remove_empty_cols()
+        self.master.footer.update_view()
