@@ -185,3 +185,9 @@ class Engine(Triggerable):
             new_df[column] = self.dataset[column].copy()
 
         self.dataset = new_df
+
+    def delete_columns_with_one_value(self):
+        unique_values = self.dataset.nunique()
+        single_value_columns = unique_values[unique_values == 1].index
+        print('Usunięte kolumny: ' + single_value_columns)
+        self.dataset = self.dataset.drop(columns=single_value_columns)

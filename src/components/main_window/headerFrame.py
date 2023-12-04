@@ -47,6 +47,9 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn = tk.Button(self, text="knn", command=self.knn)
         self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
 
+        self.read_btn = tk.Button(self, text="Usuń kolumny z jedną wartością", command=self.delete_columns_with_one_value)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
         self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
@@ -87,3 +90,7 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def knn(self):
         self.master.engine.open_knn_module()
+
+    def delete_columns_with_one_value(self):
+        self.master.engine.delete_columns_with_one_value()
+        self.master.footer.update_view()
