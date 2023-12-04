@@ -30,6 +30,9 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn = tk.Button(self, text="Normalizacja", command=self.normalization)
         self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
 
+        self.read_btn = tk.Button(self, text="Normalizacja całego zbioru", command=self.normalization_whole)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
         self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości", command=self.min_max)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
@@ -42,8 +45,8 @@ class HeaderFrame(HeaderAbstractFrame):
 
         self._reset_col()
 
-        self.btn_remove_empty = tk.Button(self, text="Remove empty", command=self.remove_empty_cols)
-        self.btn_remove_empty.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
+        self.read_btn = tk.Button(self, text="Usuń kolumny z jedną wartością", command=self.delete_columns_with_one_value)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
         self.btn_knn_one = tk.Button(self, text="knn One", command=self.knn_one)
         self.btn_knn_one.grid(row=self._row(), column=self._new_col(), sticky="nsew")
@@ -53,6 +56,7 @@ class HeaderFrame(HeaderAbstractFrame):
 
         self.btn_knn_exp_all = tk.Button(self, text="knn Experiment ALL", command=self.knn_experiment_all)
         self.btn_knn_exp_all.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+        self._reset_col()
 
         self._reset_col()
 
@@ -73,6 +77,10 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def normalization(self):
         self.master.engine.normalization_dialog()
+
+    def normalization_whole(self):
+        self.master.engine.normalize_whole_dataset()
+        self.master.footer.update_view()
 
     def min_max(self):
         self.master.engine.min_max_dialog()
@@ -101,4 +109,8 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def remove_empty_cols(self):
         self.master.engine.remove_empty_cols()
+        self.master.footer.update_view()
+
+    def delete_columns_with_one_value(self):
+        self.master.engine.delete_columns_with_one_value()
         self.master.footer.update_view()

@@ -190,3 +190,25 @@ class Engine(Triggerable):
         # Drop columns with only one unique value
         self.dataset = self.dataset.drop(single_value_cols, axis=1)
 
+
+    def normalize_whole_dataset(self):
+        base_for_new_df = {}
+        numeric_columns = self.dataset.select_dtypes(include=['int64', 'float64']).columns.tolist()
+        for column in numeric_columns:
+            new_data = (self.dataset[column] - self.dataset[column].mean()) / self.dataset[column].std()
+            base_for_new_df[column] = new_data
+
+        string_columns = self.dataset.select_dtypes(include=["object", "string"]).columns.tolist()
+
+        new_df = pd.DataFrame(base_for_new_df)
+
+        for column in string_columns:
+            new_df[column] = self.dataset[column].copy()
+
+        self.dataset = new_df
+
+    def delete_columns_with_one_value(self):
+        unique_values = self.dataset.nunique()
+        single_value_columns = unique_values[unique_values == 1].index
+        print('Usunięte kolumny: ' + single_value_columns)
+        self.dataset = self.dataset.drop(columns=single_value_columns)
