@@ -121,13 +121,14 @@ class KnnExperimentAllStartTopLevel(tk.Toplevel):
     def get_file_name(self, strategy):
         from datetime import datetime
         now = datetime.now().strftime("%m %d %Y %H %M %S")
-        return now + " " + strategy + str(random.randint(100000, 900000)) + " .json"
+        return now + " " + strategy + str(random.randint(100000, 900000)) + ".json"
 
     def plot_results(self, results, strategy_name):
         import matplotlib.pyplot as plt
         dataset = list(zip(*[(k, v) for k, v in results.items()]))
         plt.plot(*dataset)
         plt.title(strategy_name)
+        plt.savefig(strategy_name+'.png', dpi=300)
         plt.show()
 
 

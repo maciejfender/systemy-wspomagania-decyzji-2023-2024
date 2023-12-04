@@ -190,7 +190,6 @@ class Engine(Triggerable):
         # Drop columns with only one unique value
         self.dataset = self.dataset.drop(single_value_cols, axis=1)
 
-
     def normalize_whole_dataset(self):
         base_for_new_df = {}
         numeric_columns = self.dataset.select_dtypes(include=['int64', 'float64']).columns.tolist()
