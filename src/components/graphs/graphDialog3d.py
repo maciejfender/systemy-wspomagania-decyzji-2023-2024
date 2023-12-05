@@ -17,6 +17,11 @@ class GraphDialog3d(tk.Toplevel):
         self.type_var = None
         self.scatter_or_plot = None
         self.scatter_or_plot_var = None
+        self.color_names = ['Jasnopoziomkowy', 'Ciemnoniebieski', 'Ciemnofioletowy', 'Zielony limonkowy',
+                            'Pomarańczowy', 'Jadeitowy']
+        self.color_names_selected = []
+        self.markers = ['o', 'x', '+', '1', 'D', '^']
+        self.markers_selected = []
 
         self.mount()
 
@@ -37,13 +42,27 @@ class GraphDialog3d(tk.Toplevel):
             combobox.set(numeric_columns[i])
             self.comboboxes.append(combobox)
 
+        color_var = tk.StringVar()
+        color_combobox = ttk.Combobox(self, textvariable=color_var,
+                                      values=self.color_names)
+        color_combobox.grid(row=4, column=0, sticky='nw')
+
+        self.color_names_selected.append(color_var)
+
+        marker_var = tk.StringVar()
+        marker_combobox = ttk.Combobox(self, textvariable=marker_var,
+                                       values=self.markers)
+        marker_combobox.grid(row=5, column=0, sticky='nw')
+
+        self.markers_selected.append(marker_var)
+
         self.button = tk.Button(self, text="Dalej")
         self.button.config(command=self.get_graph_params_and_destroy)
         self.button.grid(row=len(numeric_columns) + 2, column=0, sticky="ne")
 
     def get_graph_params_and_destroy(self):
-        self.data_setter(self.vars[0].get(), self.vars[1].get(), self.vars[2].get(), self.scatter_or_plot_var.get())
+        self.data_setter(self.vars[0].get(), self.vars[1].get(), self.vars[2].get(), self.scatter_or_plot_var.get(),
+                         self.color_names_selected[0].get(), self.markers_selected[0].get())
         self.master.center_panel.mount_graph_3d()
         self.destroy()
         self.update()
-

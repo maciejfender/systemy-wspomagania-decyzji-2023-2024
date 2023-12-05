@@ -9,6 +9,16 @@ class Graph3D(tk.Frame):
         super().__init__(master, width=width, height=height)
         self.data = []
         self.scatter_or_plot = None
+        self.color = '#ff007f'
+        self.color_dict = {
+            'Ciemnoniebieski': '#001f3f',
+            'Jasnopoziomkowy': '#ff007f',
+            'Zielony limonkowy': '#01ff70',
+            'Ciemnofioletowy': '#800080',
+            'Pomarańczowy': '#ff6300',
+            'Jadeitowy': '#00A86B'
+        }
+        self.marker = 'o'
         # self.mount()
 
     def mount(self):
@@ -21,9 +31,9 @@ class Graph3D(tk.Frame):
         plot = fig.add_subplot(111, projection='3d')
 
         if self.scatter_or_plot == 'punkty':
-            plot.scatter(x, y, z, label='Liniowy wykres 3D', linewidth=2, color='red')
+            plot.scatter(x, y, z, label='Liniowy wykres 3D', linewidth=2, color=self.color_dict[self.color], marker=self.marker)
         else:
-            plot.plot(x, y, z, label='Liniowy wykres 3D', linewidth=2, color='red')
+            plot.plot(x, y, z, label='Liniowy wykres 3D', linewidth=2, color=self.color_dict[self.color])
 
         plot.set_xlabel(self.data[0])
         plot.set_ylabel(self.data[1])
@@ -33,7 +43,9 @@ class Graph3D(tk.Frame):
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-    def set_data(self, x, y, z, scatter_or_plot):
+    def set_data(self, x, y, z, scatter_or_plot, color, marker):
+        self.color = color
+        self.marker = marker
         self.scatter_or_plot = scatter_or_plot
         self.data = [x, y, z]
 

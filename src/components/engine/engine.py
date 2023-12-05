@@ -89,10 +89,14 @@ class Engine(Triggerable):
         df = self.dataset
 
         bins_list = bins.replace(" ", "").split(",")
-        bins_list = [float(element) for element in bins_list]
+        if bins != '':
+            bins_list = [float(element) for element in bins_list]
         labels_list = labels.replace(" ", "").split(",")
 
-        df[column + ' - Dyskr'] = pd.cut(df[column], bins=bins_list, labels=labels_list)
+        if bins_list != ['']:
+            df[f'{column} - Dyskr {len(labels_list)}'] = pd.cut(df[column], bins=bins_list, labels=labels_list)
+        else:
+            df[f'{column} - Dyskr {len(labels_list)}'] = pd.cut(df[column], len(labels_list), labels=labels_list)
 
         self.dataset = df
 
