@@ -3,3 +3,4 @@ matplotlib~=3.7.1
 numpy~=1.24.2
 future~=0.18.3
 pandastable~=0.13.1
+openpyxl~=3.2.0b1

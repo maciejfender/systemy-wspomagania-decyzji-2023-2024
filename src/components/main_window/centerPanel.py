@@ -14,8 +14,8 @@ class CenterPanel(CustomAbstractFrame):
         self.paned_window = tk.PanedWindow(self, orient=tk.HORIZONTAL)
         self.paned_window.pack(fill=tk.BOTH, expand=True)
 
-        self.left = GraphSettings(self.paned_window, background="gray", width=200)
-        self.center = tk.Frame(self.paned_window, background="blue", height=200)
+        self.left = GraphSettings(self.paned_window, background="gray", width=0)
+        self.center = tk.Frame(self.paned_window, background="#3d3d3d", height=200)
         self.temp = None
 
         self.paned_window.add(self.left)

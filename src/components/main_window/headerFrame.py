@@ -33,10 +33,10 @@ class HeaderFrame(HeaderAbstractFrame):
         self.read_btn = tk.Button(self, text="Normalizacja całego zbioru", command=self.normalization_whole)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości", command=self.min_max)
+        self.read_btn = tk.Button(self, text="Zmień zakres danych", command=self.min_max)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres procentowy",
+        self.read_btn = tk.Button(self, text="Zmień zakres danych",
                                   command=self.min_max_percentage)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
@@ -56,6 +56,10 @@ class HeaderFrame(HeaderAbstractFrame):
 
         self.btn_knn_exp_all = tk.Button(self, text="knn Experiment ALL", command=self.knn_experiment_all)
         self.btn_knn_exp_all.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
+        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości", command=self.original_data)
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
+
         self._reset_col()
 
         self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
