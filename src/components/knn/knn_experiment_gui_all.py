@@ -4,6 +4,7 @@ import time
 import tkinter as tk
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from tkinter import ttk
+from tkinter.constants import BOTTOM
 
 from components.ScrollableCustomFrame import ScrollableCustomFrame
 from components.knn.KnnOneToEveryDecisionStrategyWithOptimization import KnnOneToEveryDecisionStrategyWithOptimization
@@ -76,7 +77,7 @@ class KnnExperimentAllStartTopLevel(tk.Toplevel):
         self.scrollable.update_view_after_adding_elements()
 
         self.btn_submit = tk.Button(self, text="Start", command=self.start)
-        self.btn_submit.pack()
+        self.btn_submit.pack(side=BOTTOM)
 
     def start(self):
         strategy_name = self.var_strategy.get()
