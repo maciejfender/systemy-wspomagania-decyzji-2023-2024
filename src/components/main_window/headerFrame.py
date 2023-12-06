@@ -57,7 +57,7 @@ class HeaderFrame(HeaderAbstractFrame):
         self.btn_knn_exp_all = tk.Button(self, text="knn Experiment ALL", command=self.knn_experiment_all)
         self.btn_knn_exp_all.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości", command=self.original_data)
+        self.read_btn = tk.Button(self, text="Zmień rozkład danych - zakres wartości", command=self.min_max_normalize)
         self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
         self._reset_col()
@@ -86,6 +86,9 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def min_max(self):
         self.master.engine.min_max_dialog()
+
+    def min_max_normalize(self):
+        self.master.engine.min_max_normalize_dialog()
 
     def min_max_percentage(self):
         self.master.engine.min_max_percentage_dialog()

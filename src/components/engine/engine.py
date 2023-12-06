@@ -8,6 +8,7 @@ from components.graphs.histogramDialog import HistogramDialog
 from components.header_utils.discretizationDialog import DiscretizationDialog
 from components.header_utils.normalizationDialog import NormalizationDialog
 from components.header_utils.numericDialog import NumericDialog
+from components.header_utils.minMaxNormalizeDialog import MinMaxNormalizeDialog
 from components.header_utils.rangeDialog import RangeDialog
 from components.header_utils.rangePercentageDialog import RangePercentageDialog
 from components.knn.knn_experiment_gui_all import KnnExperimentAllStartTopLevel
@@ -120,6 +121,14 @@ class Engine(Triggerable):
         upper = float(upper_bound)
         self.dataset = self.dataset[(self.dataset[column] >= lower) & (self.dataset[column] <= upper)]
 
+    def min_max_normalize(self, column: str, lower_bound: str, upper_bound: str):
+        lower = float(lower_bound)
+        upper = float(upper_bound)
+
+        min_val = self.dataset[column].min()
+        max_val = self.dataset[column].max()
+        self.dataset[f'{column} - min_max'] = ((self.dataset[column] - min_val) / (max_val - min_val)) * (upper - lower) + lower
+
     def min_max_dialog(self):
         RangeDialog(self.main_window, self.dataset, self.min_max)
 
@@ -142,6 +151,9 @@ class Engine(Triggerable):
 
     def min_max_percentage_dialog(self):
         RangePercentageDialog(self.main_window, self.dataset, self.min_max_percentage)
+
+    def min_max_normalize_dialog(self):
+        MinMaxNormalizeDialog(self.main_window, self.dataset, self.min_max_normalize)
 
     def normalization(self, column):
         df = self.dataset
