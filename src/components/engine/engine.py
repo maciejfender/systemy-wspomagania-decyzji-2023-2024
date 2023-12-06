@@ -127,7 +127,7 @@ class Engine(Triggerable):
 
         min_val = self.dataset[column].min()
         max_val = self.dataset[column].max()
-        self.dataset[f'{column} - min_max'] = ((self.dataset[column] - min_val) / (max_val - min_val)) * (upper - lower) + lower
+        self.dataset[f'{column} <{lower},{upper}>'] = ((self.dataset[column] - min_val) / (max_val - min_val)) * (upper - lower) + lower
 
     def min_max_dialog(self):
         RangeDialog(self.main_window, self.dataset, self.min_max)
