@@ -13,13 +13,13 @@ RESULT_CONST = "Wynik:"
 MAHALANOBIS_STRATEGY = "Mahalanobisa"
 MANHATTAN_STRATEGY = "Manhattan"
 CZEBYSZEW_STRATEGY = "Czebyszewa"
-NORMAL_STRATEGY = 'Cartesian'
+NORMAL_STRATEGY = 'Euclidean'
 
 STRATEGY_MAPPING = {
     MANHATTAN_STRATEGY: MahalanobisDistanceStrategy,
     CZEBYSZEW_STRATEGY: CzebyszewDistanceStrategy,
     MAHALANOBIS_STRATEGY: MahalanobisDistanceStrategy,
-    NORMAL_STRATEGY: CartesianDistanceStrategy,
+    NORMAL_STRATEGY: EuclideanDistanceStrategy,
 }
 
 

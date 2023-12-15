@@ -13,13 +13,13 @@ from components.knn.distance_strategies.distances import *
 MAHALANOBIS_STRATEGY = "Mahalanobis"
 MANHATTAN_STRATEGY = "Manhattan"
 CZEBYSZEW_STRATEGY = "Czebyszew"
-NORMAL_STRATEGY = 'Cartesian'
+NORMAL_STRATEGY = 'Euclidean'
 
 STRATEGY_MAPPING = {
     MANHATTAN_STRATEGY: ManhattanDistanceStrategy,
     CZEBYSZEW_STRATEGY: CzebyszewDistanceStrategy,
     MAHALANOBIS_STRATEGY: MahalanobisDistanceStrategy,
-    NORMAL_STRATEGY: CartesianDistanceStrategy,
+    NORMAL_STRATEGY: EuclideanDistanceStrategy,
 }
 
 

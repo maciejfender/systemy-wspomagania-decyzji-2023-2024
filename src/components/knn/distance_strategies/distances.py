@@ -76,7 +76,7 @@ class DistanceStrategy(abc.ABC):
         return filtered.cov()
 
 
-class CartesianDistanceStrategy(DistanceStrategy):
+class EuclideanDistanceStrategy(DistanceStrategy):
     def distance(self, a: Dict[str, Any], b: Dict[str, Any]) -> float:
         filtered_and_zipped = self._filter_and_join_data(a, b, self.columns)
         return sum(

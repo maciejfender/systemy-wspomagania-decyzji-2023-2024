@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from components.knn.distance_strategies.distances import DistanceStrategy, CartesianDistanceStrategy, \
+from components.knn.distance_strategies.distances import DistanceStrategy, EuclideanDistanceStrategy, \
     MahalanobisDistanceStrategy
 
 
@@ -29,12 +29,12 @@ class TestDistanceStrategy(unittest.TestCase):
         expected = {'x': 1, 'y': 2}
         self.assertEqual(result, expected)
 
-    def test_cartesian_distance(self):
+    def test_euclidean_distance(self):
         a = {'x': 1, 'y': 2, 'z': 3}
         b = {'x': 4, 'y': 5, 'z': 6}
         columns = ['x', 'y']
 
-        strategy = CartesianDistanceStrategy(None, columns)
+        strategy = EuclideanDistanceStrategy(None, columns)
         result = strategy.distance(a, b)
 
         expected = math.pow(1 - 4, 2) + math.pow(2 - 5, 2)
