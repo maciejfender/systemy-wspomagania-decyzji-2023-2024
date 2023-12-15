@@ -16,11 +16,12 @@ class PartitionPlot2DFrame(tk.Frame):
     def dataset(self):
         return self.master.dataset
 
-    def __init__(self, master, column_x: str, column_y: str) -> None:
+    def __init__(self, master, column_x: str, column_y: str, column_c: str) -> None:
         super().__init__(master)
 
         self.column_x = column_x
         self.column_y = column_y
+        self.column_c = column_c
 
         fig = Figure(figsize=(5, 4), dpi=100)
         self.fig = fig
@@ -40,10 +41,20 @@ class PartitionPlot2DFrame(tk.Frame):
     def plot_main_plot(self):
         x = list(map(float, self.dataset[self.column_x]))
         y = list(map(float, self.dataset[self.column_y]))
+        c = list(self.dataset[self.column_c])
+        unique = list(set(c))
 
-        self.subplot.scatter(x, y)
-        self.x_lims = (np.min(x), np.max(x),)
-        self.y_lims = (np.min(y), np.max(y),)
+        zipped = list(zip(x, y, c))
+
+        (x_1, y_1, _), (x_2, y_2, _) = [
+            list(zip(*filter(lambda z: z[2] == unique[ch], zipped)))
+            for ch in range(0, 2)
+        ]
+
+        self.subplot.scatter(x_1, y_1)
+        self.subplot.scatter(x_2, y_2)
+        self.x_lims = (min(np.min(x_2), np.min(x_1)), max(np.max(x_2), np.max(x_1)))
+        self.y_lims = (min(np.min(y_2), np.min(y_1)), max(np.max(y_2), np.max(y_1)))
 
     def update_plot(self):
         self.canvas.draw()
@@ -64,10 +75,12 @@ class Partition2DTopLevel(tk.Toplevel):
     def dataset(self):
         # todo proper dataset
         return self._dataset
+
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self._dataset = engineUtils.read_to_df("INCOME.TXT", header_checked=True, separator_checked=True, separator="\t")
+        self._dataset = engineUtils.read_to_df("INCOME.TXT", header_checked=True, separator_checked=True,
+                                               separator="\t")
 
         self.var_1()
         self.var_2()
@@ -85,7 +98,7 @@ class Partition2DTopLevel(tk.Toplevel):
     def show_plot(self):
         if self.p is not None:
             self.p.pack_forget()
-        self.p = PartitionPlot2DFrame(self, self.var_column_1.get(), self.var_column_2.get())
+        self.p = PartitionPlot2DFrame(self, self.var_column_1.get(), self.var_column_2.get(), self.var_column_c.get())
         self.p.pack()
 
     def draw_vertical_line(self):
