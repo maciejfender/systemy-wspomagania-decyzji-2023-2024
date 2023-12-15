@@ -15,6 +15,7 @@ from components.knn.knn_experiment_gui_all import KnnExperimentAllStartTopLevel
 from components.knn.knn_experiment_gui_one import KnnExperimentOneStartTopLevel
 from components.knn.knn_test_one_gui import KnnOneClassifierTopLevel
 from components.load_data.readData import ReadData
+from components.partitioning.partitioning import Partition2DTopLevel
 
 
 class PrintDecoratorMeta(type):
@@ -195,6 +196,9 @@ class Engine(Triggerable):
 
     def open_knn_experiment_all_module(self):
         KnnExperimentAllStartTopLevel(self.main_window)
+
+    def open_partition_module(self):
+        Partition2DTopLevel(self.main_window)
 
     def remove_empty_cols(self):
         # Count unique values in each column

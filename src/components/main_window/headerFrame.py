@@ -62,6 +62,11 @@ class HeaderFrame(HeaderAbstractFrame):
 
         self._reset_col()
 
+        self.btn_partition_frame = tk.Button(self, text="Partitioning", command=self.partition_frame)
+        self.btn_partition_frame.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
+
+        self._reset_col()
+
         self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
         self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
 
@@ -111,6 +116,9 @@ class HeaderFrame(HeaderAbstractFrame):
 
     def knn_experiment_all(self):
         self.master.engine.open_knn_experiment_all_module()
+
+    def partition_frame(self):
+        self.master.engine.open_partition_module()
 
     def remove_empty_cols(self):
         self.master.engine.remove_empty_cols()
