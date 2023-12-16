@@ -1,25 +1,17 @@
-import random
 import tkinter as tk
 from tkinter import ttk
 from typing import Union
 
 import numpy as np
+import pandas as pd
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 from components.engine import engineUtils
+from components.partitioning.engine import *
 
 COLOR_BLACK = "#000000"
-
-VERTICAL = 1
-HORIZONTAL = 2
-
-TYPE = 3
-VALUE = 4
-
-POSITIVE = 5
-NEGATIVE = 6
 
 
 class PartitionPlot2DFrame(tk.Frame):
@@ -81,32 +73,6 @@ class PartitionPlot2DFrame(tk.Frame):
         self.update_plot()
 
 
-class PartitionEngine:
-    @property
-    def dataset(self):
-        return self.master.dataset
-
-    def __init__(self, master, class_column):
-        self.master = master
-        self.lines_log = []
-        self.subset = None
-        self.class_column = class_column
-
-    def initialize_subset(self):
-        self.subset = self.dataset.to_dict(orient="list")
-
-    def new_line(self):
-        self.initialize_subset()
-
-        return self._calculate_best_new_line()
-
-    def _calculate_best_new_line(self):
-        return {
-            TYPE: HORIZONTAL,
-            VALUE: random.random(),
-        }
-
-
 class Partition2DTopLevel(tk.Toplevel):
     @property
     def dataset(self):
@@ -117,8 +83,9 @@ class Partition2DTopLevel(tk.Toplevel):
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self._dataset = engineUtils.read_to_df("INCOME_2.TXT", header_checked=True, separator_checked=True,
-                                               separator="\t")
+        # self._dataset = engineUtils.read_to_df("INCOME_2.TXT", header_checked=True, separator_checked=True,
+        #                                        separator="\t")
+        self._dataset = pd.DataFrame({"a": [0, 0, 1, 1], "b": [0, 1, 0, 1], "c": ["F", "T", "T", "F"]})
 
         self.var_1()
         self.var_2()
@@ -131,7 +98,7 @@ class Partition2DTopLevel(tk.Toplevel):
         self.label_statistics = tk.Label(self, textvariable=self.var_statistics)
         self.label_statistics.pack()
 
-        self.partition_engine: Union[PartitionEngine, None] = None
+        self.partition_engine: Union[PartitionEngine_4, None] = None
 
         tk.Button(self, text="New Line", command=self.draw_new_line).pack()
 
@@ -143,7 +110,8 @@ class Partition2DTopLevel(tk.Toplevel):
 
     def draw_new_line(self):
         if self.partition_engine is None:
-            self.partition_engine = PartitionEngine(self, self.var_column_c.get())
+            self.partition_engine = PartitionEngine_4(self, [self.var_column_1.get(), self.var_column_2.get()],
+                                                      self.var_column_c.get())
 
         new_line = self.partition_engine.new_line()
 
