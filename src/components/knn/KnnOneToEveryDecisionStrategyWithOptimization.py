@@ -1,5 +1,5 @@
 import time
-from typing import Dict, List
+from typing import List
 
 import pandas as pd
 
@@ -49,6 +49,7 @@ class KnnOneToEveryDecisionStrategyWithOptimization:
                 score = self.strategy.distance(r2, r1)
 
                 add_to_scores(i1, i2, score)
+
     def make_decision(self, other_index, k: int):
         """
         W skrócie, bierze sortuje je po scorze, wybiera K z najmniejszymi odl, potem zlicza ile jest czego, jak jest wiele maxów wybiera alfabetycznie najmniejszego
@@ -57,7 +58,7 @@ class KnnOneToEveryDecisionStrategyWithOptimization:
         :param k:
         :return:
         """
-        scored = [( score,row_index) for row_index, score in self.scores[other_index].items()]
+        scored = [(score, row_index) for row_index, score in self.scores[other_index].items()]
 
         counted = {}
         for _, row_id in sorted(scored, key=lambda x: x[0])[:k]:
