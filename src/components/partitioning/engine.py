@@ -78,12 +78,12 @@ class PartitionEngine_4:
                                                                                                            grouped_by_variable_value),
                                                                                                        variable_index)
             vector = self.get_better_result(collected_left, current_class_left,
-                                            last_value_left, deleted_left,
+                                            last_value_left, deleted_left, True,
                                             collected_right, current_class_right,
-                                            last_value_right, deleted_right)
+                                            last_value_right, deleted_right, False)
             results.append([variable_name, vector])
 
-        best_of_the_best = [None] * 4
+        best_of_the_best = [None] * 5
         name = None
         for v_name, v in results:
             if not self.should_choose_left(*best_of_the_best, *v):
@@ -166,18 +166,20 @@ class PartitionEngine_4:
             temp_list.append(record)
         return grouped_by_variable_value
 
-    def get_better_result(self, collected_left, current_class_left, last_value_left, deleted_left, collected_right,
-                          current_class_right, last_value_right, deleted_right):
-        left_set = [collected_left, current_class_left, last_value_left, deleted_left]
-        right_set = [collected_right, current_class_right, last_value_right, deleted_right]
+    def get_better_result(self, collected_left, current_class_left, last_value_left, deleted_left,
+                          direction_to_lower_left,
+                          collected_right, current_class_right, last_value_right,
+                          deleted_right, direction_to_lower_right, ):
+        left_set = [collected_left, current_class_left, last_value_left, deleted_left, direction_to_lower_left]
+        right_set = [collected_right, current_class_right, last_value_right, deleted_right, direction_to_lower_right]
 
-        if self.should_choose_left(collected_left, current_class_left, last_value_left, deleted_left, collected_right,
-                                   current_class_right, last_value_right, deleted_right):
+        if self.should_choose_left(collected_left, current_class_left, last_value_left, deleted_left, direction_to_lower_left,
+                                   collected_right, current_class_right, last_value_right, deleted_right, direction_to_lower_right):
             return left_set
         return right_set
 
-    def should_choose_left(self, collected_left, current_class_left, last_value_left, deleted_left, collected_right,
-                           current_class_right, last_value_right, deleted_right):
+    def should_choose_left(self, collected_left, current_class_left, last_value_left, deleted_left, direction_to_lower_left,collected_right,
+                           current_class_right, last_value_right, deleted_right, direction_to_lower_right):
 
         if last_value_left is None:
             return False
