@@ -9,205 +9,11 @@ NEGATIVE = 6
 
 REMOVED = 7
 LINES = 8
-#
-#
-# class PartitionEngine_2:
-#     @property
-#     def dataset(self):
-#         return self.master.dataset
-#
-#     @property
-#     def endo(self):
-#         return self.class_column
-#
-#     def __init__(self, master, class_x, class_y, class_column):
-#         self.master = master
-#         self.lines_log = []
-#         self.subset = None
-#         self.class_column = class_column
-#         self.class_x = class_x
-#         self.class_y = class_y
-#         self.egzo = (class_x, class_y)
-#         self.statistics = {
-#             REMOVED: 0
-#         }
-#
-#     def initialize_subset(self):
-#         if self.subset is not None:
-#             return
-#         self.subset = self.dataset[[self.class_x, self.class_y, self.class_column]].to_dict(orient="list")
-#         for c in self.egzo:
-#             self.subset[c] = list(map(float, self.subset[c]))
-#         # {'Aktywa': ['2.8', '3.4', ], 'Przych': ['3.2', '6.4',], 'Hrabstwo': ['ROGERS', 'HIGHLAND',]}
-#
-#     def new_line(self):
-#         self.initialize_subset()
-#
-#         return self._calculate_best_new_line()
-#
-#     def _calculate_best_new_line(self):
-#
-#         fits = [(i, self._find_best_fit(c)) for i, c in zip([HORIZONTAL, VERTICAL], self.egzo)]
-#         filtered_non_zero = list(filter(lambda x: x[1][1] > 0, fits))
-#         if len(filtered_non_zero) == 0:
-#             raise NotImplementedError("Not found any, need to remove one")
-#         maximum_counter = max(map(lambda x: x[1][1], fits))
-#         best = next(filter(lambda x: x[1][1] == maximum_counter, fits))
-#
-#         self._remove_objects_from_subset(best[1][2])
-#
-#         return {
-#             TYPE: best[0],
-#             VALUE: best[1][0],
-#         }
-#
-#     def _remove_objects_from_subset(self, indexes):
-#         indexes = set(indexes)
-#         for c in [*self.egzo, self.endo]:
-#             temp = []
-#             for i, v in enumerate(self.subset[c]):
-#                 if i not in indexes:
-#                     temp.append(v)
-#             self.subset[c] = temp
-#
-#     def _find_best_fit(self, egzo_col):
-#         data = self.subset[egzo_col]
-#         classes = self.subset[self.endo]
-#
-#         zipped_data_classes_sorted_asc = sorted(list(zip(data, classes, range(len(classes)))), key=lambda x: x[0])
-#
-#         best_from_left = self._best_from_left_side(zipped_data_classes_sorted_asc)
-#         best_from_right = self._best_from_left_side(reversed(zipped_data_classes_sorted_asc))
-#
-#         if best_from_left[1] > best_from_right[1]:
-#             return best_from_left
-#         if best_from_left[1] <= best_from_right[1] and best_from_right[1] != 0:
-#             return best_from_right
-#         else:
-#             raise NotImplementedError("HEHEH NOT YET")
-#
-#     def _best_from_left_side(self, zipped_data_classes):
-#         first = None
-#         last = None
-#         counter = 1
-#         to_be_removed = []
-#         for val, cl, index in zipped_data_classes:
-#
-#             if first is None:  # inicjalizacja
-#                 first = cl
-#                 last = val
-#                 to_be_removed.append(index)
-#                 continue
-#
-#             if cl == first:  # mają takie same klasy, można dalej ciąć w prawo
-#                 last = val
-#                 to_be_removed.append(index)
-#                 counter += 1
-#             else:  # różnią się klasami
-#                 if last == val:
-#                     # raise NotImplementedError("same values, need to remove one point")
-#                     pass
-#                 return ((val + last) / 2, counter, to_be_removed)
-#
-#
-# class PartitionEngine_3:
-#     @property
-#     def dataset(self):
-#         return self.master.dataset
-#
-#     @property
-#     def endo(self):
-#         return self.class_column
-#
-#     def __init__(self, master, egzo_columns, class_column):
-#         self.master = master
-#         self.lines_log = []
-#         self.subset = None
-#         self.class_column = class_column
-#         self.egzo = egzo_columns
-#         self.statistics = {
-#             REMOVED: 0,
-#             LINES: 0,
-#         }
-#
-#     def initialize_subset(self):
-#         if self.subset is not None:
-#             return
-#         self.subset = self.dataset[[self.egzo + [self.class_column]]].to_dict(orient="list")
-#         for c in self.egzo:
-#             self.subset[c] = list(map(float, self.subset[c]))
-#         # {'Aktywa': ['2.8', '3.4', ], 'Przych': ['3.2', '6.4',], 'Hrabstwo': ['ROGERS', 'HIGHLAND',]}
-#
-#     def new_line(self):
-#         self.initialize_subset()
-#
-#         return self._calculate_best_new_line()
-#
-#     def _calculate_best_new_line(self):
-#
-#         fits = [(i, self._find_best_fit(c)) for i, c in enumerate(self.egzo)]
-#         filtered_non_zero = list(filter(lambda x: x[1][1] > 0, fits))
-#         if len(filtered_non_zero) == 0:
-#             raise NotImplementedError("Not found any, need to remove one")
-#         maximum_counter = max(map(lambda x: x[1][1], fits))
-#         best = next(filter(lambda x: x[1][1] == maximum_counter, fits))
-#
-#         self._remove_objects_from_subset(best[1][2])
-#         self.lines_log.append(best)
-#
-#         return {
-#             TYPE: best[0],
-#             VALUE: best[1][0],
-#         }
-#
-#     def _remove_objects_from_subset(self, indexes):
-#         indexes = set(indexes)
-#         for c in [*self.egzo, self.endo]:
-#             temp = []
-#             for i, v in enumerate(self.subset[c]):
-#                 if i not in indexes:
-#                     temp.append(v)
-#             self.subset[c] = temp
-#
-#     def _find_best_fit(self, egzo_col):
-#         data = self.subset[egzo_col]
-#         classes = self.subset[self.endo]
-#
-#         zipped_data_classes_sorted_asc = sorted(list(zip(data, classes, range(len(classes)))), key=lambda x: x[0])
-#
-#         best_from_left = self._best_from_left_side(zipped_data_classes_sorted_asc)
-#         best_from_right = self._best_from_left_side(reversed(zipped_data_classes_sorted_asc))
-#
-#         if best_from_left[1] > best_from_right[1]:
-#             return best_from_left
-#         if best_from_left[1] <= best_from_right[1] and best_from_right[1] != 0:
-#             return best_from_right
-#         else:
-#             raise NotImplementedError("HEHEH NOT YET")
-#
-#     def _best_from_left_side(self, zipped_data_classes,):
-#         first = None
-#         last = None
-#         counter = 1
-#         to_be_removed = []
-#         for val, cl, index in zipped_data_classes:
-#
-#             if first is None:  # inicjalizacja
-#                 first = cl
-#                 last = val
-#                 to_be_removed.append(index)
-#                 continue
-#
-#             if cl == first:  # mają takie same klasy, można dalej ciąć w prawo
-#                 last = val
-#                 to_be_removed.append(index)
-#                 counter += 1
-#             else:  # różnią się klasami
-#                 if last == val: # todo zmiana na sprawdzanie kolizji na wszystkich zmiennych
-#                     # raise NotImplementedError("same values, need to remove one point")
-#                     self.points_colliding.append(index)
-#                     pass
-#                 return ((val + last) / 2, counter, to_be_removed)
+
+STATUS = 10
+DATA = 11
+
+UNKNOWN = 12
 
 
 class PartitionEngine_4:
@@ -225,6 +31,7 @@ class PartitionEngine_4:
         self.subset = None
         self.class_column = class_column
         self.egzo = egzo_columns
+        self.data_columns = None
         self.points_colliding = []
         self.statistics = {
             REMOVED: 0,
@@ -234,10 +41,17 @@ class PartitionEngine_4:
     def initialize_subset(self):
         if self.subset is not None:
             return
-        self.subset = self.dataset[self.egzo + [self.class_column]].to_dict(orient="list")
-        for c in self.egzo:
-            self.subset[c] = list(map(float, self.subset[c]))
-        # {'Aktywa': ['2.8', '3.4', ], 'Przych': ['3.2', '6.4',], 'Hrabstwo': ['ROGERS', 'HIGHLAND',]}
+        split = self.dataset[self.egzo + [self.class_column]].to_dict(orient="split")
+        should_convert_to_float = [c in self.egzo for c in split['columns']]
+        self.data_columns = split['columns']
+        self.data_columns_mapping = {name: i
+                                     for i, name in enumerate(self.data_columns)}
+        self.subset = [
+            [
+                float(d) if should_convert_to_float[i] else d
+                for i, d in enumerate(record)
+            ]
+            for record in split['data']]
 
     def new_line(self):
         self.initialize_subset()
@@ -245,80 +59,154 @@ class PartitionEngine_4:
         return self._calculate_best_new_line()
 
     def _calculate_best_new_line(self):
+        endo_index = self.data_columns_mapping[self.endo]
+        results = []
+        for variable_name in self.egzo:
+            variable_index = self.data_columns_mapping[variable_name]
 
-        fits = [(i, self._find_best_fit(c)) for i, c in enumerate(self.egzo)]
-        filtered_non_zero = list(filter(lambda x: x[1] is not None and x[1][1] > 0, fits))
-        if len(filtered_non_zero) == 0:
-            raise NotImplementedError("Not found any, need to remove one")
-        maximum_counter = max(map(lambda x: x[1][1], fits))
-        best = next(filter(lambda x: x[1][1] == maximum_counter, fits))
+            # sortuje elementy po kluczu tej zmiennej po ktorej sie iteruje
+            sorted_records = sorted(self.subset, key=lambda x: x[variable_index])
 
-        self._remove_objects_from_subset(best[1][2])
-        self.lines_log.append(best)
+            grouped_by_variable_value = self.group_records_to_multi_map(sorted_records, variable_index)
 
-        return {
-            TYPE: best[0],
-            VALUE: best[1][0],
-        }
+            collected_left, current_class_left, last_value_left, deleted_left = self.get_left_line(endo_index,
+                                                                                                   grouped_by_variable_value,
+                                                                                                   variable_index)
 
-    def _remove_objects_from_subset(self, indexes):
-        indexes = set(indexes)
-        for c in [*self.egzo, self.endo]:
-            temp = []
-            for i, v in enumerate(self.subset[c]):
-                if i not in indexes:
-                    temp.append(v)
-            self.subset[c] = temp
+            collected_right, current_class_right, last_value_right, deleted_right = self.get_left_line(endo_index,
+                                                                                                       reversed(
+                                                                                                           grouped_by_variable_value),
+                                                                                                       variable_index)
+            vector = self.get_better_result(collected_left, current_class_left,
+                                            last_value_left, deleted_left,
+                                            collected_right, current_class_right,
+                                            last_value_right, deleted_right)
+            results.append([variable_name, vector])
 
-    def _find_best_fit(self, egzo_col):
-        data = self.subset[egzo_col]
-        other_data = [self.subset[c] for c in self.egzo if c != egzo_col]
-        classes = self.subset[self.endo]
+        best_of_the_best = [None] * 4
+        name = None
+        for v_name, v in results:
+            if not self.should_choose_left(*best_of_the_best, *v):
+                best_of_the_best = v
+                name = v_name
 
-        zipped_data_classes_sorted_asc = list(sorted((zip(data, classes, range(len(classes)),zip(*other_data))), key=lambda x: x[0]))
+        orientation = self.get_orientation(name)
 
-        best_from_left = self._best_from_left_side(zipped_data_classes_sorted_asc)
-        best_from_right = self._best_from_left_side(reversed(zipped_data_classes_sorted_asc))
+        if best_of_the_best is not None:
 
-        if best_from_left is None and best_from_right is not None:
-            return best_from_right
-
-        if best_from_left is not None and best_from_right is None:
-            return best_from_left
-
-        if best_from_left is None and best_from_right is None:
-            return None
-
-        if best_from_left[1] > best_from_right[1]:
-            return best_from_left
-        if best_from_left[1] <= best_from_right[1] and best_from_right[1] != 0:
-            return best_from_right
+            return {
+                TYPE: orientation,
+                VALUE: best_of_the_best[2],
+            }
         else:
-            raise NotImplementedError("HEHEH NOT YET")
+            raise NotImplementedError("Dodanie braku generowania krawędzi")
 
-    def _best_from_left_side(self, zipped_data_classes,):
-        first = None
-        last = None
-        counter = 1
-        to_be_removed = []
-        points_colliding = []
-        for val, cl, index,other_data in zipped_data_classes:
+    def get_left_line(self, endo_index, grouped_by_variable_value, variable_index):
+        collected_left = []
+        last_value_left = None
+        current_class = None
+        deleted = None
+        for records_list in grouped_by_variable_value:
 
-            if first is None:  # inicjalizacja
-                first = cl
-                last = val
-                to_be_removed.append(index)
-                continue
+            all_records_in_group_has_the_same_value = len(set(map(lambda x: x[endo_index], records_list))) == 1
 
-            if cl == first:  # mają takie same klasy, można dalej ciąć w prawo
-                last = val
-                to_be_removed.append(index)
-                counter += 1
-            else:  # różnią się klasami
-                if last == val: # todo zmiana na sprawdzanie kolizji na wszystkich zmiennych
-                    # raise NotImplementedError("same values, need to remove one point")
-                    # self.points_colliding.append(index)
-                    points_colliding.append(index)
+            if current_class is None:
+                current_class = records_list[0][endo_index]
+
+            if all_records_in_group_has_the_same_value:
+                if current_class == records_list[0][endo_index]:
+
+                    last_value_left = records_list[0][variable_index]
+                    collected_left = collected_left + records_list
                     continue
-                    pass
-                return ((val + last) / 2, counter, to_be_removed,points_colliding)
+                else:
+                    last_value_left = last_value_left + records_list[0][variable_index]
+                    last_value_left /= 2
+                    break
+
+            else:
+                if last_value_left is not None:
+                    last_value_left = last_value_left + records_list[0][variable_index]
+                    last_value_left /= 2
+                else:
+                    if current_class is None:
+                        max_occurance_of_class = {
+                            c: sum(cl[endo_index] == c
+                                   for cl in records_list
+                                   )
+                            for c in set(map(lambda x: x[endo_index], records_list))
+                        }
+                        m = max(max_occurance_of_class.values())
+                        for c, no in max_occurance_of_class.items():
+                            if no == m:
+                                current_class = c
+
+                    deleted = list(filter(lambda x: x[endo_index] != current_class, records_list))
+                    last_value_left = records_list[0][variable_index]
+                    collected_left = collected_left + list(
+                        filter(lambda x: x[endo_index] == current_class, records_list)
+                    )
+                    continue
+                break
+        return collected_left, current_class, last_value_left, deleted
+
+    def group_records_to_multi_map(self, sorted_records, variable_index):
+        grouped_by_variable_value = []
+        grouped_by_variable_value_key_set = set()
+        for record in sorted_records:
+            record_variable_value = record[variable_index]
+
+            if record_variable_value not in grouped_by_variable_value_key_set:
+                temp_list = []
+                grouped_by_variable_value.append(temp_list)
+                grouped_by_variable_value_key_set.add(record_variable_value)
+            else:
+                temp_list = grouped_by_variable_value[-1]
+
+            temp_list.append(record)
+        return grouped_by_variable_value
+
+    def get_better_result(self, collected_left, current_class_left, last_value_left, deleted_left, collected_right,
+                          current_class_right, last_value_right, deleted_right):
+        left_set = [collected_left, current_class_left, last_value_left, deleted_left]
+        right_set = [collected_right, current_class_right, last_value_right, deleted_right]
+
+        if self.should_choose_left(collected_left, current_class_left, last_value_left, deleted_left, collected_right,
+                                   current_class_right, last_value_right, deleted_right):
+            return left_set
+        return right_set
+
+    def should_choose_left(self, collected_left, current_class_left, last_value_left, deleted_left, collected_right,
+                           current_class_right, last_value_right, deleted_right):
+
+        if last_value_left is None:
+            return False
+
+        if last_value_right is None:
+            return True
+
+        if deleted_right is not None and deleted_left is None:
+            return True
+
+        if deleted_right is None and deleted_left is not None:
+            return False
+
+        dl_left = len(deleted_left)
+        dl_right = len(deleted_right)
+
+        if dl_left > dl_right:
+            return False
+
+        if dl_right > dl_left:
+            return True
+
+        cl_right = len(collected_right)
+        cl_left = len(collected_left)
+
+        if cl_right > cl_left:
+            return False
+        else:
+            return True
+
+    def get_orientation(self, name):
+        return self.data_columns_mapping[name]

@@ -8,7 +8,6 @@ from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-from components.engine import engineUtils
 from components.partitioning.engine import *
 
 COLOR_BLACK = "#000000"
@@ -85,7 +84,7 @@ class Partition2DTopLevel(tk.Toplevel):
 
         # self._dataset = engineUtils.read_to_df("INCOME_2.TXT", header_checked=True, separator_checked=True,
         #                                        separator="\t")
-        self._dataset = pd.DataFrame({"a": [0, 0, 1, 1], "b": [0, 1, 0, 1], "c": ["F", "T", "T", "F"]})
+        self._dataset = pd.DataFrame({"a": [0, 0, 1, 2, 2], "b": [0, 1, 1, 0, 1], "c": ["F", "T", "T", "T", "F"]})
 
         self.var_1()
         self.var_2()
