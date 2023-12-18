@@ -15,8 +15,12 @@ DATA = 11
 
 UNKNOWN = 12
 
+DELETED = 13
+SELECTED = 14
+CLASS = 15
 
-class PartitionEngine_4:
+
+class PartitionEngine:
     @property
     def dataset(self):
         return self.master.dataset
@@ -32,7 +36,6 @@ class PartitionEngine_4:
         self.class_column = class_column
         self.egzo = egzo_columns
         self.data_columns = None
-        self.points_colliding = []
         self.statistics = {
             REMOVED: 0,
             LINES: 0,
@@ -59,6 +62,9 @@ class PartitionEngine_4:
         return self._calculate_best_new_line()
 
     def _calculate_best_new_line(self):
+        if self._all_objects_are_in_the_same_class():
+            return None
+
         endo_index = self.data_columns_mapping[self.endo]
         results = []
         for variable_name in self.egzo:
@@ -93,10 +99,22 @@ class PartitionEngine_4:
         orientation = self.get_orientation(name)
 
         if best_of_the_best is not None:
+            selected = best_of_the_best[0]
+            deleted = best_of_the_best[3]
+
+            future_subset = self.subset
+
+            if deleted is not None:
+                future_subset = filter(lambda x: x not in deleted, self.subset)
+
+            self.subset = list(filter(lambda x: x not in selected, future_subset))
 
             return {
                 TYPE: orientation,
+                SELECTED: best_of_the_best[0],
+                CLASS: best_of_the_best[1],
                 VALUE: best_of_the_best[2],
+                DELETED: best_of_the_best[3]
             }
         else:
             raise NotImplementedError("Dodanie braku generowania krawędzi")
@@ -173,12 +191,15 @@ class PartitionEngine_4:
         left_set = [collected_left, current_class_left, last_value_left, deleted_left, direction_to_lower_left]
         right_set = [collected_right, current_class_right, last_value_right, deleted_right, direction_to_lower_right]
 
-        if self.should_choose_left(collected_left, current_class_left, last_value_left, deleted_left, direction_to_lower_left,
-                                   collected_right, current_class_right, last_value_right, deleted_right, direction_to_lower_right):
+        if self.should_choose_left(collected_left, current_class_left, last_value_left, deleted_left,
+                                   direction_to_lower_left,
+                                   collected_right, current_class_right, last_value_right, deleted_right,
+                                   direction_to_lower_right):
             return left_set
         return right_set
 
-    def should_choose_left(self, collected_left, current_class_left, last_value_left, deleted_left, direction_to_lower_left,collected_right,
+    def should_choose_left(self, collected_left, current_class_left, last_value_left, deleted_left,
+                           direction_to_lower_left, collected_right,
                            current_class_right, last_value_right, deleted_right, direction_to_lower_right):
 
         if last_value_left is None:
@@ -192,15 +213,16 @@ class PartitionEngine_4:
 
         if deleted_right is None and deleted_left is not None:
             return False
+        if deleted_left is not None and deleted_right is not None:
 
-        dl_left = len(deleted_left)
-        dl_right = len(deleted_right)
+            dl_left = len(deleted_left)
+            dl_right = len(deleted_right)
 
-        if dl_left > dl_right:
-            return False
+            if dl_left > dl_right:
+                return False
 
-        if dl_right > dl_left:
-            return True
+            if dl_right > dl_left:
+                return True
 
         cl_right = len(collected_right)
         cl_left = len(collected_left)
@@ -212,3 +234,7 @@ class PartitionEngine_4:
 
     def get_orientation(self, name):
         return self.data_columns_mapping[name]
+
+    def _all_objects_are_in_the_same_class(self):
+        s = set(map(lambda x: x[self.data_columns_mapping[self.endo]], self.subset))
+        return len(s) == 1
