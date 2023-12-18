@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Union
 
+import pandas as pd
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -175,14 +176,14 @@ class Partition2DTopLevel(tk.Toplevel):
 class PartitionMultiDimTopLevel(tk.Toplevel):
     @property
     def dataset(self):
-       return self.master.engine.dataset
+        return self._dataset if self.master.engine.dataset is None else self.master.engine.dataset
 
     def __init__(self, master) -> None:
         super().__init__(master)
 
         # self._dataset = engineUtils.read_to_df("INCOME.TXT", header_checked=True, separator_checked=True,
         #                                        separator="\t")
-        # self._dataset = pd.DataFrame({"a": [0, 1, 2, 3, 4], "b": [0, 1, 0, 1, 0], "c": ["F", "T", "T", "T", "S"]})
+        self._dataset = pd.DataFrame({"a": [0, 1, 2, 3, 4], "b": [0, 1, 0, 1, 0], "c": ["F", "T", "T", "T", "S"]})
         # self._dataset = pd.DataFrame({"a": [0, 0, 1, 2, 2], "b": [0, 1, 1, 0, 1], "c": ["F", "T", "T", "T", "S"]})
 
         self.removed_count = 0
@@ -197,6 +198,19 @@ class PartitionMultiDimTopLevel(tk.Toplevel):
         self.partition_engine: Union[PartitionEngine, None] = None
 
         tk.Button(self, text="Generate All", command=self.draw_all_new_lines).pack()
+
+        tk.Label(self, text="Podaj obiekt do klasyfikacji:").pack()
+
+
+        self.var_to_classify = tk.StringVar(self,value="["+','.join(["0"]*len(self.get_egzogenic_columns()))+"]")
+        self.entry_to_classify = tk.Entry(self,textvariable=self.var_to_classify)
+        self.entry_to_classify.pack()
+        self.btn_classify_new_object = tk.Button(self,text="Klasyfikuj nowy", command=self.command_classify_new_object)
+        self.btn_classify_new_object.pack()
+
+
+    def command_classify_new_object(self):
+        pass
 
     def draw_new_line(self):
         self._initialize_partition_engine()
@@ -218,8 +232,11 @@ class PartitionMultiDimTopLevel(tk.Toplevel):
 
     def _initialize_partition_engine(self):
         if self.partition_engine is None:
-            self.partition_engine = PartitionEngine(self, list(
-                filter(lambda x: x != self.var_column_c.get(), self.dataset.columns)), self.var_column_c.get())
+            self.partition_engine = PartitionEngine(self, self.get_egzogenic_columns(), self.var_column_c.get())
+
+    def get_egzogenic_columns(self):
+        return list(
+            filter(lambda x: x != self.var_column_c.get(), self.dataset.columns))
 
     def draw_all_new_lines(self):
         while self.draw_new_line():
