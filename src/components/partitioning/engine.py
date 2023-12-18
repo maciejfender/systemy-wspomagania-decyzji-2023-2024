@@ -238,3 +238,9 @@ class PartitionEngine:
     def _all_objects_are_in_the_same_class(self):
         s = set(map(lambda x: x[self.data_columns_mapping[self.endo]], self.subset))
         return len(s) == 1
+
+
+class PartitionEngineWithEncoding(PartitionEngine):
+    def __init__(self, master, egzo_columns, class_column):
+        super().__init__(master, egzo_columns, class_column)
+

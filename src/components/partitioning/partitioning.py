@@ -86,6 +86,9 @@ class Partition2DTopLevel(tk.Toplevel):
         self._dataset = pd.DataFrame({"a": [0, 1, 2, 3, 4], "b": [0, 1, 0, 1, 0], "c": ["F", "T", "T", "T", "S"]})
         # self._dataset = pd.DataFrame({"a": [0, 0, 1, 2, 2], "b": [0, 1, 1, 0, 1], "c": ["F", "T", "T", "T", "S"]})
 
+        self.removed_count = 0
+        self.lines_count = 0
+
         self.var_1()
         self.var_2()
         self.var_c()
@@ -100,6 +103,7 @@ class Partition2DTopLevel(tk.Toplevel):
         self.partition_engine: Union[PartitionEngine, None] = None
 
         tk.Button(self, text="New Line", command=self.draw_new_line).pack()
+        tk.Button(self, text="Generate All", command=self.draw_all_new_lines).pack()
 
     def show_plot(self):
         if self.p is not None:
@@ -115,7 +119,7 @@ class Partition2DTopLevel(tk.Toplevel):
         new_line = self.partition_engine.new_line()
 
         if new_line is None:
-            return
+            return False
 
         if new_line[TYPE] == VERTICAL:
             a = (None, new_line[VALUE])
@@ -124,6 +128,20 @@ class Partition2DTopLevel(tk.Toplevel):
 
         if self.p is not None:
             self.p.new_line(*a)
+
+            if new_line[DELETED] is not None:
+                deleted_c = len(new_line[DELETED])
+                self.removed_count += deleted_c
+
+            self.lines_count += 1
+
+            self.update_statistics_label()
+            return True
+        return False
+
+    def draw_all_new_lines(self):
+        while self.draw_new_line():
+            pass
 
     def var_c(self):
         tk.Label(self, text="Klasa").pack()
@@ -148,3 +166,7 @@ class Partition2DTopLevel(tk.Toplevel):
         self.combobox_class_column_1 = ttk.Combobox(self, values=list(self.dataset.columns),
                                                     textvariable=self.var_column_1)
         self.combobox_class_column_1.pack()
+
+    def update_statistics_label(self):
+        self.var_statistics.set(
+            f"Statystyki:\n\n Ilość krawędzi: {self.lines_count}\nIlość usuniętych wierzchołków: {self.removed_count}")
