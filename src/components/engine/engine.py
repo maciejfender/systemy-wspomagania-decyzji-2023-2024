@@ -6,16 +6,16 @@ from components.graphs.graphDialog2d import GraphDialog2d
 from components.graphs.graphDialog3d import GraphDialog3d
 from components.graphs.histogramDialog import HistogramDialog
 from components.header_utils.discretizationDialog import DiscretizationDialog
+from components.header_utils.minMaxNormalizeDialog import MinMaxNormalizeDialog
 from components.header_utils.normalizationDialog import NormalizationDialog
 from components.header_utils.numericDialog import NumericDialog
-from components.header_utils.minMaxNormalizeDialog import MinMaxNormalizeDialog
 from components.header_utils.rangeDialog import RangeDialog
 from components.header_utils.rangePercentageDialog import RangePercentageDialog
 from components.knn.knn_experiment_gui_all import KnnExperimentAllStartTopLevel
 from components.knn.knn_experiment_gui_one import KnnExperimentOneStartTopLevel
 from components.knn.knn_test_one_gui import KnnOneClassifierTopLevel
 from components.load_data.readData import ReadData
-from components.partitioning.partitioning import Partition2DTopLevel
+from components.partitioning.partitioning import Partition2DTopLevel, PartitionMultiDimTopLevel
 
 
 class PrintDecoratorMeta(type):
@@ -128,7 +128,8 @@ class Engine(Triggerable):
 
         min_val = self.dataset[column].min()
         max_val = self.dataset[column].max()
-        self.dataset[f'{column} <{lower},{upper}>'] = ((self.dataset[column] - min_val) / (max_val - min_val)) * (upper - lower) + lower
+        self.dataset[f'{column} <{lower},{upper}>'] = ((self.dataset[column] - min_val) / (max_val - min_val)) * (
+                    upper - lower) + lower
 
     def min_max_dialog(self):
         RangeDialog(self.main_window, self.dataset, self.min_max)
@@ -197,8 +198,11 @@ class Engine(Triggerable):
     def open_knn_experiment_all_module(self):
         KnnExperimentAllStartTopLevel(self.main_window)
 
-    def open_partition_module(self):
+    def open_partition_2D_module(self):
         Partition2DTopLevel(self.main_window)
+
+    def open_partition_multi_dim_module(self):
+        PartitionMultiDimTopLevel(self.main_window)
 
     def remove_empty_cols(self):
         # Count unique values in each column

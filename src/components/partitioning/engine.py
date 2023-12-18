@@ -1,5 +1,5 @@
-VERTICAL = 1
-HORIZONTAL = 0
+VERTICAL = 0
+HORIZONTAL = 1
 
 TYPE = 3
 VALUE = 4
@@ -30,6 +30,7 @@ class PartitionEngine:
         return self.class_column
 
     def __init__(self, master, egzo_columns, class_column):
+        self.data_columns_mapping = None
         self.master = master
         self.lines_log = []
         self.subset = None
@@ -100,6 +101,8 @@ class PartitionEngine:
 
         if best_of_the_best is not None:
             selected = best_of_the_best[0]
+            if not selected:
+                return None
             deleted = best_of_the_best[3]
 
             future_subset = self.subset

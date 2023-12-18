@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Union
 
-import pandas as pd
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -61,6 +60,8 @@ class PartitionPlot2DFrame(tk.Frame):
         self.canvas.draw()
 
     def new_line(self, x=None, y=None):
+        if not ((x is not None and y is None) or (x is None and y is not None)):
+            pass
         assert (x is not None and y is None) or (x is None and y is not None)
 
         self.counter += 1
@@ -74,16 +75,15 @@ class PartitionPlot2DFrame(tk.Frame):
 class Partition2DTopLevel(tk.Toplevel):
     @property
     def dataset(self):
-        # todo proper dataset
 
-        return self._dataset
+        return self.master.engine.dataset
 
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        # self._dataset = engineUtils.read_to_df("INCOME_2.TXT", header_checked=True, separator_checked=True,
+        # self._dataset = engineUtils.read_to_df("INCOME.TXT", header_checked=True, separator_checked=True,
         #                                        separator="\t")
-        self._dataset = pd.DataFrame({"a": [0, 1, 2, 3, 4], "b": [0, 1, 0, 1, 0], "c": ["F", "T", "T", "T", "S"]})
+        # self._dataset = pd.DataFrame({"a": [0, 1, 2, 3, 4], "b": [0, 1, 0, 1, 0], "c": ["F", "T", "T", "T", "S"]})
         # self._dataset = pd.DataFrame({"a": [0, 0, 1, 2, 2], "b": [0, 1, 1, 0, 1], "c": ["F", "T", "T", "T", "S"]})
 
         self.removed_count = 0
@@ -121,7 +121,7 @@ class Partition2DTopLevel(tk.Toplevel):
         if new_line is None:
             return False
 
-        if new_line[TYPE] == VERTICAL:
+        if new_line[TYPE] == HORIZONTAL:
             a = (None, new_line[VALUE])
         else:
             a = (new_line[VALUE], None)
@@ -166,6 +166,73 @@ class Partition2DTopLevel(tk.Toplevel):
         self.combobox_class_column_1 = ttk.Combobox(self, values=list(self.dataset.columns),
                                                     textvariable=self.var_column_1)
         self.combobox_class_column_1.pack()
+
+    def update_statistics_label(self):
+        self.var_statistics.set(
+            f"Statystyki:\n\n Ilość krawędzi: {self.lines_count}\nIlość usuniętych wierzchołków: {self.removed_count}")
+
+
+class PartitionMultiDimTopLevel(tk.Toplevel):
+    @property
+    def dataset(self):
+       return self.master.engine.dataset
+
+    def __init__(self, master) -> None:
+        super().__init__(master)
+
+        # self._dataset = engineUtils.read_to_df("INCOME.TXT", header_checked=True, separator_checked=True,
+        #                                        separator="\t")
+        # self._dataset = pd.DataFrame({"a": [0, 1, 2, 3, 4], "b": [0, 1, 0, 1, 0], "c": ["F", "T", "T", "T", "S"]})
+        # self._dataset = pd.DataFrame({"a": [0, 0, 1, 2, 2], "b": [0, 1, 1, 0, 1], "c": ["F", "T", "T", "T", "S"]})
+
+        self.removed_count = 0
+        self.lines_count = 0
+        self.lines = []
+        self.var_c()
+
+        self.var_statistics = tk.StringVar(self, value="")
+        self.label_statistics = tk.Label(self, textvariable=self.var_statistics)
+        self.label_statistics.pack()
+
+        self.partition_engine: Union[PartitionEngine, None] = None
+
+        tk.Button(self, text="Generate All", command=self.draw_all_new_lines).pack()
+
+    def draw_new_line(self):
+        self._initialize_partition_engine()
+
+        new_line = self.partition_engine.new_line()
+
+        if new_line is None:
+            return False
+
+        if new_line[DELETED] is not None:
+            deleted_c = len(new_line[DELETED])
+            self.removed_count += deleted_c
+
+        self.lines_count += 1
+
+        self.lines.append(new_line)
+        self.update_statistics_label()
+        return True
+
+    def _initialize_partition_engine(self):
+        if self.partition_engine is None:
+            self.partition_engine = PartitionEngine(self, list(
+                filter(lambda x: x != self.var_column_c.get(), self.dataset.columns)), self.var_column_c.get())
+
+    def draw_all_new_lines(self):
+        while self.draw_new_line():
+            pass
+        pass
+
+    def var_c(self):
+        tk.Label(self, text="Klasa").pack()
+        last_col = self.dataset.columns[-1]
+        self.var_column_c = tk.StringVar(self, value=last_col)
+        self.combobox_class_column = ttk.Combobox(self, values=list(self.dataset.columns),
+                                                  textvariable=self.var_column_c)
+        self.combobox_class_column.pack()
 
     def update_statistics_label(self):
         self.var_statistics.set(
