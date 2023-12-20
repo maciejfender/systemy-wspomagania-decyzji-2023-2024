@@ -1,3 +1,4 @@
+import json
 import tkinter as tk
 from tkinter import ttk
 from typing import Union
@@ -8,6 +9,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 from components.partitioning.engine import *
+
+RESULT_CONST_LABEL = "Klasa: "
 
 COLOR_BLACK = "#000000"
 
@@ -77,7 +80,8 @@ class Partition2DTopLevel(tk.Toplevel):
     @property
     def dataset(self):
 
-        return self.master.engine.dataset
+        return self.master.engine.dataset if self.master.engine.dataset is not None else pd.DataFrame(
+            {"a": [0, 1, 2, 3, 4], "b": [0, 1, 0, 1, 0], "c": ["F", "T", "T", "T", "S"]})
 
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -201,16 +205,26 @@ class PartitionMultiDimTopLevel(tk.Toplevel):
 
         tk.Label(self, text="Podaj obiekt do klasyfikacji:").pack()
 
-
-        self.var_to_classify = tk.StringVar(self,value="["+','.join(["0"]*len(self.get_egzogenic_columns()))+"]")
-        self.entry_to_classify = tk.Entry(self,textvariable=self.var_to_classify)
+        self.var_to_classify = tk.StringVar(self, value="[" + ','.join(["0"] * len(self.get_egzogenic_columns())) + "]")
+        self.entry_to_classify = tk.Entry(self, textvariable=self.var_to_classify)
         self.entry_to_classify.pack()
-        self.btn_classify_new_object = tk.Button(self,text="Klasyfikuj nowy", command=self.command_classify_new_object)
+        self.btn_classify_new_object = tk.Button(self, text="Klasyfikuj nowy", command=self.command_classify_new_object)
         self.btn_classify_new_object.pack()
 
+        self.var_classify_one_result = tk.StringVar(self, value=RESULT_CONST_LABEL)
+        tk.Label(self, textvariable=self.var_classify_one_result).pack()
+
+        tk.Button(self, command=self.encode_data, text="Encode").pack()
+
+    def encode_data(self):
+        self.partition_engine.encode()
+        self.master.footer.update_view()
 
     def command_classify_new_object(self):
-        pass
+        val = self._get_classify_new_object_field_value()
+
+        result = self.partition_engine.classify_new_object_impl(val)
+        self.var_classify_one_result.set(RESULT_CONST_LABEL + str(result))
 
     def draw_new_line(self):
         self._initialize_partition_engine()
@@ -254,3 +268,9 @@ class PartitionMultiDimTopLevel(tk.Toplevel):
     def update_statistics_label(self):
         self.var_statistics.set(
             f"Statystyki:\n\n Ilość krawędzi: {self.lines_count}\nIlość usuniętych wierzchołków: {self.removed_count}")
+
+    def _get_classify_new_object_field_value(self):
+        val = list(map(float, json.loads(self.var_to_classify.get())))
+        assert len(val) == len(self.get_egzogenic_columns())
+
+        return val

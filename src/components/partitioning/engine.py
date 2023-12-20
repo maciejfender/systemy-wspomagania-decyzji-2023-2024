@@ -4,6 +4,7 @@ HORIZONTAL = 1
 TYPE = 3
 VALUE = 4
 
+DIRECTION = 9
 POSITIVE = 5
 NEGATIVE = 6
 
@@ -32,8 +33,8 @@ class PartitionEngine:
     def __init__(self, master, egzo_columns, class_column):
         self.data_columns_mapping = None
         self.master = master
-        self.lines_log = []
         self.subset = None
+        self.lines = []
         self.class_column = class_column
         self.egzo = egzo_columns
         self.data_columns = None
@@ -60,7 +61,10 @@ class PartitionEngine:
     def new_line(self):
         self.initialize_subset()
 
-        return self._calculate_best_new_line()
+        line = self._calculate_best_new_line()
+        if line is not None:
+            self.lines.append(line)
+        return line
 
     def _calculate_best_new_line(self):
         if self._all_objects_are_in_the_same_class():
@@ -112,12 +116,19 @@ class PartitionEngine:
 
             self.subset = list(filter(lambda x: x not in selected, future_subset))
 
+            one = best_of_the_best[0][0][orientation]
+            if one > best_of_the_best[2]:
+                direction = POSITIVE
+            else:
+                direction = NEGATIVE
+
             return {
                 TYPE: orientation,
                 SELECTED: best_of_the_best[0],
                 CLASS: best_of_the_best[1],
                 VALUE: best_of_the_best[2],
-                DELETED: best_of_the_best[3]
+                DELETED: best_of_the_best[3],
+                DIRECTION: direction
             }
         else:
             raise NotImplementedError("Dodanie braku generowania krawędzi")
@@ -242,8 +253,65 @@ class PartitionEngine:
         s = set(map(lambda x: x[self.data_columns_mapping[self.endo]], self.subset))
         return len(s) == 1
 
+    def classify_new_object_impl(self, obj):
+        if not self.lines:
+            return None
 
-class PartitionEngineWithEncoding(PartitionEngine):
-    def __init__(self, master, egzo_columns, class_column):
-        super().__init__(master, egzo_columns, class_column)
+        for line in self.lines:
+            c = line[CLASS]
+            variable_index = line[TYPE]
+            border_value = line[VALUE]
+            obj_value = obj[variable_index]
+            direction = line[DIRECTION]
 
+            if direction == POSITIVE:
+                if border_value <= obj_value:
+                    return c
+            elif direction == NEGATIVE:
+                if border_value >= obj_value:
+                    return c
+
+        return None
+
+    def encode_one(self, row):
+        lines = self.lines
+
+        result = [0 for _ in range(len(lines))]
+
+        if not lines:
+            return None
+
+        for i, line in enumerate(lines):
+
+            variable_index = line[TYPE]
+            border_value = line[VALUE]
+            obj_value = row[variable_index]
+            direction = line[DIRECTION]
+
+            if direction == POSITIVE:
+                if border_value <= obj_value:
+                    result[i] = 1
+                else:
+                    result[i] = 0
+            else:
+                if border_value >= obj_value:
+                    result[i] = 1
+                else:
+                    result[i] = 0
+        return result
+
+    def encode(self):
+        df = self.dataset
+        df.drop(self.endo, axis=1, inplace=True)
+
+        egzo_cols = self.egzo
+
+        data = df[egzo_cols].to_dict(orient="split")['data']
+
+        encoded = list(zip(*map(self.encode_one, data)))
+        new_cols_names = [f'b{i + 1}' for i in range(len(self.lines))]
+
+        for name, values in zip(new_cols_names, encoded):
+            df[name] = values
+
+        print(df)
