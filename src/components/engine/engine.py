@@ -16,7 +16,7 @@ from components.knn.knn_experiment_gui_one import KnnExperimentOneStartTopLevel
 from components.knn.knn_test_one_gui import KnnOneClassifierTopLevel
 from components.load_data.readData import ReadData
 from components.partitioning.partitioning import Partition2DTopLevel, PartitionMultiDimTopLevel
-
+from tkinter import filedialog
 
 class PrintDecoratorMeta(type):
     def __new__(mcs, name, bases, attrs):
@@ -235,3 +235,7 @@ class Engine(Triggerable):
         single_value_columns = unique_values[unique_values == 1].index
         print('Usunięte kolumny: ' + single_value_columns)
         self.dataset = self.dataset.drop(columns=single_value_columns)
+
+    def save_data_dialog(self):
+        saving_path = filedialog.asksaveasfile(mode='w', defaultextension=".csv", filetypes=[("csv file", ".csv")])
+        self.dataset.to_csv(saving_path, index=False)

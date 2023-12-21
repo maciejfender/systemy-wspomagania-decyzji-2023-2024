@@ -68,13 +68,17 @@ class HeaderFrame(HeaderAbstractFrame):
         self.btn_partition_frame = tk.Button(self, text="Partitioning MultiDim", command=self.partition_multi_dim_frame)
         self.btn_partition_frame.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
-        self._reset_col()
+        self.btn_save_df = tk.Button(self, text="Save data", command=self.save_data)
+        self.btn_save_df.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
         self.read_btn = tk.Button(self, text="Przywróć dane", command=self.original_data)
-        self.read_btn.grid(row=self._new_row(), column=self._new_col(), sticky="nsew")
+        self.read_btn.grid(row=self._row(), column=self._new_col(), sticky="nsew")
 
     def load_data(self):
         self.master.footer.load_data()
+
+    def save_data(self):
+        self.master.engine.save_data_dialog()
 
     def graph_2d(self):
         self.master.center_panel.set_and_mount_graph_2d()
